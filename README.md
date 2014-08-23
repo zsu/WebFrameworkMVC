@@ -1,16 +1,17 @@
 #What is WebFrameworkMVC
 
-WebFrameworkMVC is a Asp.net MVC web application framework built on top of asp.net MVC, Web Api 2. It integrates many open source libraries like Nhibernate, Log4net, Bootstrap, Castle Windsor, etc. and provides a feature rich web application framework.
+WebFrameworkMVC is a Asp.net MVC web application framework built on top of asp.net MVC, Web Api 2.
 
 Some of the features of WebFramework are:
 
   * User managment(self registration, authentication, authorization)
   * Claim based authorization with two level Role/Permission management
-  * Configuration management(system settings, email template, offline maintenance control)
+  * Configuration management(system settings, email template)
   * Logging system(server side, client side, activities log, authentication audit)
   * Generic repository pattern with Nhibernate and Entity Framework Provider
   * Server side multiple fields sorting, paging and filtering with different operators
   * Messaging
+  * Web Server management(Refresh Cache, Restart AppPool, Application offline scheduler)
 
 ###Live Demo: https://adminweb.azurewebsites.net/
 Login: user1/Abc123
