@@ -1,0 +1,67 @@
+﻿@using App.Common
+@using App.Mvc
+@using Web.Infrastructure.Extensions
+@{
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+}
+@section menu {
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        @Html.ActionLink((string)Util.ApplicationConfiguration.AppFullName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    </div>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            @if (User.IsInAnyRole(new List<string> { Web.Constants.ROLE_ADMIN, Web.Constants.PERMISSION_EDIT_ROLE }))
+            {
+                <li class="dropdown" />
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Roles<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Roles", "Index", "Role", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Permissions", "Index", "Permission", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Role User List", "UserList", "Role", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                </ul>
+            }
+            @if (User.IsInAnyRole(new List<string> { Web.Constants.ROLE_ADMIN, Web.Constants.ROLE_USERADMIN, Web.Constants.PERMISSION_EDIT_USER }))
+            {
+                <li class="dropdown" />
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Users", "Index", "User", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                </ul>
+            }
+            @if (User.IsInAnyRole(new List<string> { Web.Constants.ROLE_ADMIN }))
+            {
+                <li class="dropdown" />
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Maintenance<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    @*<li class="divider"></li>*@
+                    <li>@Html.ActionLink("Logs", "Index", "Log", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Activity Logs", "Index", "ActivityLog", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Authentication Audit", "Index", "AuthenticationAudit", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Settings", "Index", "Setting", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Clear Cache", "ClearCache", "Common", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Message Templates", "Index", "MessageTemplate", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>@*@Html.ActionLink("Scheudled Tasks", "Index", "QuartzTask", new { area = "Admin" }, new { @class = "dropdown" })*@</li>
+                    <li>@Html.ActionLink("Restart Application", "RestartApplication", "Common", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                </ul>
+            }
+
+            @*<li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>*@
+        </ul>
+        @Html.Partial("_LoginPartial")
+    </div>
+}
+@RenderBody()
+@section scripts
+{
+    @RenderSection("scripts", false)
+}
+@section footerright
+{
+    @Html.ActionLink("About", "About", "Home", new { area = "" }, null) | 
+    @Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, null)
+}

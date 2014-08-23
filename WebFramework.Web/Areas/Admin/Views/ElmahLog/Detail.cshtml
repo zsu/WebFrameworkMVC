@@ -1,0 +1,100 @@
+﻿@model Elmah.ErrorLogEntry
+@{
+    ViewBag.Title = "Error Detail: " + Model.Id;
+}
+<h2>@ViewBag.Title</h2>
+<div>
+    <a href="@Url.Action("Index", "Log")" class="btn btn-info">
+        <span class="glyphicon glyphicon-hand-left"></span> Back
+    </a>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        ApplicationName
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Error.ApplicationName)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        HostName
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Error.HostName)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Type
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Error.Type)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Source
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Error.Source)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Message
+    </label>
+    <div class="col-md-10">
+        <pre>@Html.DisplayFor(model => model.Error.Message)</pre>
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Detail
+    </label>
+    <div class="col-md-10">
+        <pre>@Html.DisplayFor(model => model.Error.Detail)</pre>
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        User
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Error.User)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Time
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Error.Time)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        StatusCode
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Error.StatusCode)
+    </div>
+</div>
+@if (Model.Error.QueryString.Count > 0)
+{
+    @Html.Partial("_ElmahCollectionInfo", new Web.Areas.Admin.Models.ElmahCollectionInfoModel { Data = Model.Error.QueryString, Id = "QueryString", Title = "QueryString" })
+
+}
+@if (Model.Error.Form.Count > 0)
+{
+    @Html.Partial("_ElmahCollectionInfo", new Web.Areas.Admin.Models.ElmahCollectionInfoModel { Data = Model.Error.Form, Id = "Form", Title = "Form" })
+
+}
+@if (Model.Error.ServerVariables.Count > 0)
+{
+    @Html.Partial("_ElmahCollectionInfo", new Web.Areas.Admin.Models.ElmahCollectionInfoModel { Data = Model.Error.ServerVariables, Id = "ServerVariables", Title = "Server Variables" })
+}
+@if (Model.Error.Cookies.Count > 0)
+{
+    @Html.Partial("_ElmahCollectionInfo", new Web.Areas.Admin.Models.ElmahCollectionInfoModel { Data = Model.Error.Cookies, Id = "Cookies", Title = "Cookies" })
+}

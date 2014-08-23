@@ -1,0 +1,18 @@
+﻿@using App.Common
+@{
+    ViewBag.Title = "Contact";
+}
+<h2>@ViewBag.Title.</h2>
+
+<address>
+    @Util.ApplicationConfiguration.SupportAddress1<br />
+    @Util.ApplicationConfiguration.SupportAddress2<br />
+    <abbr title="Phone">P:</abbr>
+    @Util.ApplicationConfiguration.SupportPhone
+</address>
+
+<address>
+    <strong>Support: </strong><a href="mailto:@Util.ApplicationConfiguration.SupportEmail">@Util.ApplicationConfiguration.SupportEmail</a><br />
+    <strong>Hours: </strong>@Util.ApplicationConfiguration.SupportHours<br />
+    <strong>Web: </strong><a href="@Util.ApplicationConfiguration.SupportURL">@Util.ApplicationConfiguration.SupportURL</a><br />
+</address>

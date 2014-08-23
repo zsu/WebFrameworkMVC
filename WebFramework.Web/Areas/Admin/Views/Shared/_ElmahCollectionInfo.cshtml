@@ -1,0 +1,52 @@
+﻿
+@model Web.Areas.Admin.Models.ElmahCollectionInfoModel
+@if (Model == null || Model.Data==null || Model.Data.Count==0) { return; }
+@{   var collection = Model;
+
+    //
+    // If the collection isn't there or it's empty, then bail out.
+    //
+
+    if (collection.Data != null && collection.Data.Count > 0)
+    {
+        var items =
+            from i in Enumerable.Range(0, collection.Data.Count)
+            select new
+            {
+                Index  = i,
+                Key    = collection.Data.GetKey(i),
+                Value  = collection.Data[i],
+            };
+
+        items = items.OrderBy(e => e.Key, StringComparer.OrdinalIgnoreCase);
+<div id="@collection.Id">
+
+    <label class ="control-label">@collection.Title</label>
+    @*
+        // Some values can be large and add scroll bars to the page
+        // as well as ruin some formatting. So we encapsulate the
+        // table into a scrollable view that is controlled via the
+        // style sheet.
+    *@
+
+    <div class="scroll-view table-responsive">
+
+        <table cellspacing="0" style="border-collapse:collapse;" class="table table-condensed table-striped">
+            <tr>
+                <th class="name-col" style="white-space:nowrap;">Name</th>
+                <th class="value-col" style="white-space:nowrap;">Value</th>
+            </tr>
+
+            @foreach (var item in items)
+            {
+                <tr class="@(item.Index % 2 == 0 ? "even" : "odd")">
+                    <td class="key-col">@item.Key</td>
+                    <td class="value-col">@item.Value</td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+    }
+}

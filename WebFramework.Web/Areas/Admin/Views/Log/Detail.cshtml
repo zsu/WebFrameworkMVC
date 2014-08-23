@@ -1,0 +1,90 @@
+﻿@model WebFramework.Data.Domain.Logs
+@{
+    ViewBag.Title = "Error Detail: " + Model.Id;
+}
+<h2>@ViewBag.Title</h2>
+<div>
+    <a href="@Url.Action("Index", "Log")" class="btn btn-info">
+        <span class="glyphicon glyphicon-hand-left"></span> Back
+    </a>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        ApplicationName
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Application)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        HostName
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Host)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        LogLevel
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.LogLevel)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Message
+    </label>
+    <div class="col-md-10">
+        <pre>@Html.DisplayFor(model => model.Message)</pre>
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        User
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.UserName)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Time
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.CreatedDate)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Logger
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Logger)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Client IP
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.ClientIP)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Session Id
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.SessionId)
+    </div>
+</div>
+<div class="row">
+    <label class="col-md-2 control-label">
+        Thread
+    </label>
+    <div class="col-md-10">
+        @Html.DisplayFor(model => model.Thread)
+    </div>
+</div>

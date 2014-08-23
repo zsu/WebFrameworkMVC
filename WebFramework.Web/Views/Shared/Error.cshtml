@@ -1,0 +1,14 @@
+﻿@using App.Common
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Internal Error Page 500";
+    ViewBag.AppTitle = "Internal Error Page";
+}
+
+<p>The server encountered an unexpected condition that prevented it from  fulfilling your request. </p>
+<p>Please return to the previous page and try again. If  you continue having difficulty, please <a href="http://www.aaa.aaa">contact us</a>.</p>
+<p>Error occurred at: @DateTime.Now.ToString(Util.ApplicationConfiguration.DateTimeFormat, System.Globalization.DateTimeFormatInfo.InvariantInfo)</p>
+@if (Session != null)
+{ 
+    <p>Error number: @Session.SessionID</p>
+}

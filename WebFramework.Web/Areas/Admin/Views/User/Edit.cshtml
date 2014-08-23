@@ -1,0 +1,180 @@
+﻿@model Web.Areas.Admin.Models.UserRoleEditModel
+@{
+    ViewBag.Title = "Edit User: " + Model.User.Username;
+}
+@Styles.Render("~/Content/jqgrid")
+@Scripts.Render("~/bundles/jquery")
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            <div>
+                <a href="@Url.Action("Index", "User")" class="btn btn-info">
+                    <span class="glyphicon glyphicon-hand-left"></span> Back
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="table-responsive">
+                <table id="tblgrid"></table>
+            </div>
+            <div id="pager">
+            </div>
+            <script type="text/javascript">
+                $().ready(function () {
+                    var baseUrl = '@Url.Content("~/")';
+                    var API_URL = baseUrl+"api/userroles/" + '@Model.User.ID';
+                    var grid = $('#tblgrid');
+                    $(grid).jqGrid({
+                        autowidth: true,
+                        caption: 'User Roles',
+                        datatype: 'json',
+                        mtype: 'GET',
+                        height: '100%',
+                        pager: '#pager',
+                        rowList: [10, 15, 20, 50],
+                        rowNum: 10,
+                        sortname: 'HasRole',
+                        sortorder: 'desc',
+                        toolbar: [false, 'bottom'],
+                        url: API_URL,
+                        viewrecords: true,
+                        ignoreCase: true,
+                        colModel: [
+                        {
+                            name: 'Id',
+                            label: 'RoleId',
+                            editable: true,
+                            edittype: 'text',
+                            editoptions: { readonly: 'readonly' },
+                            index: 'Id',
+                            hidden: true
+                        }, {
+                            name: 'Name',
+                            editable: true,
+                            edittype: 'text',
+                            editoptions: { readonly: 'readonly' },
+                            index: 'Name'
+                        }, {
+                            name: 'Description',
+                            editable: true,
+                            edittype: 'text',
+                            editoptions: { readonly: 'readonly' },
+                            index: 'Description'
+                        }, {
+                            name: 'HasRole',
+                            editable: true,
+                            edittype: 'checkbox',
+                            editoptions: { value:"true:false" },
+                            formatter: 'checkbox',
+                            searchoptions: { sopt: ['eq'], value: "true:true;false:false" },
+                            stype: 'select',
+                            index: 'HasRole'
+                        }
+                        ]
+                    });
+                    $(grid).jqGrid("navGrid", "#pager", { add: false, edit: true, del: false, search: true, refresh: true },
+                                updateDialog('PUT', API_URL),//edit parameters
+                                updateDialog('POST', API_URL),//add parameters
+                                updateDialog('DELETE', API_URL),//del parameters
+                    {
+                        groupOps: [{ op: "AND", text: "and" }, { op: "OR", text: "or" }], multipleSearch: true, multipleGroup: true, showQuery: true, sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'ew', 'en', 'cn', 'nc']/*,closeAfterSearch:true,*/
+                    },//search parameters
+                    { recreateForm: true }
+                    );
+                    $.extend($.jgrid.edit, {
+                        afterSubmit: function (response, postdata) {
+                            var res = $.parseJSON(response.responseText);
+                            if (res.Message) {
+                                var myInfo = '<div class="ui-state-highlight ui-corner-all">' +
+                            '<span class="ui-icon ui-icon-info" ' +
+                                'style="float: left; margin-right: .3em;"></span>' +
+                            res.Message +
+                            '</div>',
+                            $infoTr = $("#TblGrid_" + $.jgrid.jqID(this.id) + ">tbody>tr.tinfo"),
+                            $infoTd = $infoTr.children("td.topinfo");
+                                $infoTd.html(myInfo);
+                                $infoTr.show();
+
+                                // display status message to 3 sec only
+                                setTimeout(function () {
+                                    $infoTr.slideUp("slow");
+                                }, 3000);
+                            }
+                            return [res.Success, res.Message, res.RowId];
+                        },
+                        errorTextFormat: showError
+                    });
+                });
+                function updateDialog(action, url) {
+                    return {
+                        url: url,
+                        closeAfterAdd: false,
+                        closeAfterEdit: false,
+                        afterShowForm: function (formId) { },
+                        modal: true,
+                        onclickSubmit: function (params) {
+                            var list = $("#tblgrid");
+                            var selectedRow = list.getGridParam("selrow");
+                            rowData = list.getRowData(selectedRow);
+                            params.url = url; //+ rowData.UserId;
+                            params.mtype = action;
+                        },
+                        beforeShowForm: function ($form) {
+                            $form.find(".FormElement[readonly]")
+                                .prop("disabled", true)
+                                .addClass("ui-state-disabled")
+                                .closest(".DataTD")
+                                .prev(".CaptionTD")
+                                .prop("disabled", true)
+                                .addClass("ui-state-disabled");
+                        },
+                        recreateForm: true,
+                        width: "300"
+                    };
+                }
+                function showSelectRowAlert(gridid) {
+                    var alertIDs = { themodal: 'alertmod', modalhead: 'alerthd', modalcontent: 'alertcnt' };
+                    if ($("#" + alertIDs.themodal).html() === null || $("#" + alertIDs.themodal).html() === undefined) {
+                        var gbox = $("#gbox_" + $.jgrid.jqID(gridid));
+                        var of = $(gbox).offset();
+                        var w = $(gbox).width();
+                        var h = $(gbox).height();
+                        var w1 = $("#" + alertIDs.themodal).width();
+                        var h1 = $("#" + alertIDs.themodal).height();
+                        var toppos = of.top + ((h - h1) / 2);
+                        var leftpos = of.left + ((w - w1) / 2);
+                        $.jgrid.createModal(alertIDs, "<div>" + $.jgrid.nav.alerttext + "</div><span tabindex='0'><span tabindex='-1' id='jqg_alrt'></span></span>",
+                            {
+                                gbox: "#gbox_" + $.jgrid.jqID(gridid), jqModal: true, drag: true, resize: true,
+                                caption: $.jgrid.nav.alertcap,
+                                //top: 100, left: 100, width: 200, height: 'auto',
+                                top: toppos, left: leftpos, width: w1, height: 'auto',
+                                closeOnEscape: true,
+                                zIndex: null
+                            }, "", "", true);
+                    }
+                    $.jgrid.viewModal("#" + alertIDs.themodal, { gbox: "#gbox_" + $.jgrid.jqID(gridid), jqm: true });
+                    $("#jqg_alrt").focus();
+                }
+                function showError(data) {
+                    var res = $.parseJSON(data.responseText);
+                    if (res.ExceptionMessage)
+                        log.error(res.ExceptionMessage);
+                    return '<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>' +
+                           "<strong>Error: <strong>" + res.Message;/*Status: '" +
+                             data.statusText + "'. Error code: " + data.status;*/
+                }
+            </script>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqgrid")
+}
+

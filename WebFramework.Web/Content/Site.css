@@ -1,0 +1,142 @@
+﻿body {
+    padding-top: 90px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* Styles for notification
+-----------------------------------------------------------*/
+#messagewrapper
+{
+	position: fixed;
+	top: 0px;
+	right: 10px;
+	z-index: 10000;
+	margin: 5px auto;
+	width: 500px;
+}
+
+#messagewrapper .messagebox
+{
+	/*padding: 12px 10px 10px 30px;*/
+	box-shadow: 5px 5px 10px #000;
+}
+
+#messagewrapper .success
+{
+	color: #060;
+	background: #cfc url(Images/ok.gif) no-repeat 8px 12px !important;
+}
+
+#messagewrapper .info
+{
+	color: #06f;
+	background: #0df url(Images/info.gif) no-repeat 8px 12px !important;
+}
+
+#messagewrapper .warning
+{
+	color: #c60;
+	background: #ffc url(Images/warn.gif) no-repeat 8px 12px !important;
+}
+
+#messagewrapper .error
+{
+	color: #c00;
+	background: #fcc url(Images/fail.gif) no-repeat 8px 12px !important;
+}
+
+.messagebox.success
+{
+	background: #cfc url(Images/ok.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+}
+
+.messagebox.info
+{
+	background: #0df url(Images/info.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+	font-size:0.85em;
+	font-weight:bold;
+}
+
+.messagebox.warning
+{
+	background: #ffc url(Images/warn.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+}
+
+.messagebox.error
+{
+	background: #fcc url(Images/fail.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+}
+.ui-dialog-content .messagebox.success
+{
+	background: url(Images/ok.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+}
+.ui-dialog-content .messagebox.info
+{
+	background: url(Images/info.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+	font-size:0.85em;
+	font-weight:bold;
+}
+
+.ui-dialog-content .messagebox.warning
+{
+	background: url(Images/warn.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+}
+
+.ui-dialog-content .messagebox.error
+{
+	background: url(Images/fail.gif) no-repeat 8px 12px !important;
+	text-align:left;
+	padding:12px 10px 10px 30px !important;
+}

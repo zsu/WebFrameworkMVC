@@ -1,0 +1,20 @@
+﻿@model Web.Areas.UserAccount.Models.SendUsernameReminderInputModel
+@{
+    ViewBag.Title = "Send Username Reminder";
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary("Errors")
+
+    @Html.AntiForgeryToken()
+    
+    <fieldset>
+        <legend>Send Username Reminder</legend>
+
+        @Html.EditorForModel()
+
+        <div class="buttons">
+            <button class="btn btn-info">Send Reminder</button>
+        </div>
+    </fieldset>
+}

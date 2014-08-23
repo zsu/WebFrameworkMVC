@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+@using App.Common;
+@using App.Mvc;
+@using Web.Infrastructure.Extensions;
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - @Util.ApplicationConfiguration.AppAcronym</title>
+    @Styles.Render("~/Content/css")
+    <link href="@Url.Content("~/Content/themes/redmond/jquery-ui.css")" rel="stylesheet" type="text/css" />
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/log4javascript");
+    <script type="text/javascript">
+        var baseUrl = '@Url.Content("~/")';
+    </script>
+
+</head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-brand" style="padding:0px 15px">
+                <a href="#" title="WebFramework" class="brand">
+                    <img id="logoPrint" src="~/Content/Images/logo.jpg" alt="WebFramework" border="0" height="90" width="230">
+                </a>
+            </div>
+            @RenderSection("menu",required:false)
+        </div>
+    </div>
+    <div class="container body-content">
+        <div id="messagewrapper" style="display: none">
+            @Html.RenderMessages()
+        </div>
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - @Util.ApplicationConfiguration.Copyright Build Version: @ViewContext.Controller.GetType().Assembly.GetName().Version @File.GetLastWriteTimeUtc(ViewContext.Controller.GetType().Assembly.Location).ToClientTime()
+            <span class="pull-right">@RenderSection("footerright", required: false)</span></p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryui") @*Modal dialog close button image bug in jquery ui, must be renderred after bootstrap*@
+    @Scripts.Render("~/bundles/afterload")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

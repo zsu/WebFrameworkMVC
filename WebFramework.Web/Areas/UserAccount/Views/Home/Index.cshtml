@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>User Account Home</h2>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <h2>Signed In</h2>
+    using (Html.BeginForm())
+    {
+        <fieldset>
+            <legend>Profile</legend>
+            <p>
+                <label>Gender</label>
+                <select name="gender">
+                    <option value="">-not set-</option>
+                    <option value="male">male</option>
+                    <option value="female">female</option>
+                </select>
+            </p>
+            <p><button class="btn btn-info">Save Changes</button></p>
+        </fieldset>
+    }
+}
+else
+{
+    <h2>Not Signed In</h2>
+}
+<ul>
+    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li>@Html.ActionLink("Logout", "Index", "Logout")</li>
+        <li>@Html.ActionLink("Verify Your Email Account", "Verify", "Register")</li>
+        <li>@Html.ActionLink("Change Password", "Index", "ChangePassword")</li>
+        <li>@Html.ActionLink("Change Password Reset Secret", "Index", "ChangeSecretQuestion")</li>
+        <li>@Html.ActionLink("Change Username", "Index", "ChangeUsername")</li>
+        <li>@Html.ActionLink("Change Email", "Index", "ChangeEmail")</li>
+        <li>@Html.ActionLink("Change Mobile Phone Number", "Index", "ChangeMobile")</li>
+        <li>@Html.ActionLink("Configure Client Certificates", "Index", "Certificate")</li>
+        <li>@Html.ActionLink("Configure Two Factor Authentication", "Index", "TwoFactorAuth")</li>
+        <li>@Html.ActionLink("Manage external provider", "Manage", "LinkedAccount")</li>
+        <li>@Html.ActionLink("Close Account", "Index", "CloseAccount")</li>
+    }
+    else
+    {
+        <li>@Html.ActionLink("Login", "Index", "Login")</li>
+        <li>@Html.ActionLink("Login with external provider", "Index", "LinkedAccount")</li>
+        <li>@Html.ActionLink("Email Username", "Index", "SendUsernameReminder")</li>
+        <li>@Html.ActionLink("Register", "Index", "Register")</li>
+        <li>@Html.ActionLink("Reset Password", "Index", "PasswordReset")</li>
+    }
+    <li>@Html.ActionLink("Admin Account Lookup", "Index", "Home", new { area = "Admin" }, null)</li>
+</ul>
+
+<h3>Your Claims</h3>
+<dl>
+    @foreach (var claim in System.Security.Claims.ClaimsPrincipal.Current.Claims)
+    {
+        <dt>@claim.Type</dt>
+        <dd>@claim.Value</dd>
+        <dd>@claim.Issuer</dd>
+    }
+</dl>
