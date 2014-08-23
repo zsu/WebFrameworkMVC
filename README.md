@@ -83,7 +83,6 @@ The encrypted connectionstrings in web.config also has three corresponding conne
 ```
 #Screenshots
 ![WebFramework](screenshots/login.jpg?raw=true "login")
-![WebFramework](screenshots/menu.jpg?raw=true "menu")
 ![WebFramework](screenshots/log.jpg?raw=true "log")
 ![WebFramework](screenshots/user.jpg?raw=true "user")
 ![WebFramework](screenshots/filter.jpg?raw=true "filter")
