@@ -1,8 +1,8 @@
-#What is AdminWeb
+#What is WebFrameworkMVC
 
-AdminWeb is a real world Asp.net MVC web application framework built on top of asp.net MVC 5, Web Api 2. It integrates many open source libraries like Nhibernate, Log4net, Bootstrap, Castle Windsor, etc. and provides a feature rich web application framework.
+WebFrameworkMVC is a Asp.net MVC web application framework built on top of asp.net MVC, Web Api 2. It integrates many open source libraries like Nhibernate, Log4net, Bootstrap, Castle Windsor, etc. and provides a feature rich web application framework.
 
-Some of the features of AdminWeb are:
+Some of the features of WebFramework are:
 
   * User managment(self registration, authentication, authorization)
   * Claim based authorization with two level Role/Permission management
@@ -15,7 +15,7 @@ Some of the features of AdminWeb are:
 ###Live Demo: https://adminweb.azurewebsites.net/
 Login: user1/Abc123
 
-#Getting started with AdminWeb
+#Getting started with WebFramework
 
   * Restore Nuget package
   * Build solution
@@ -31,11 +31,11 @@ Login: user1/Abc123
 
   * Find the following line in web.config; Change it to your smtp server
 ```XML
-      <smtp from="noreply-adminweb@xxx.xxx">
+      <smtp from="noreply-WebFramework@xxx.xxx">
         <network host="smtp.gmail.com" userName="aaa@aaa.aaa" password="aaa" port="587" enableSsl="true" />
       </smtp>
 ```
-  * Find the following in AdminWeb\Web\Configurations\log.config;
+  * Find the following in WebFramework.Web\Configurations\log.config;
     Change it to your email address
 ```XML
 <appender name="SmtpAppender" type="log4net.Appender.SmtpAppender">
@@ -45,8 +45,8 @@ Login: user1/Abc123
      You will receive emails regarding the initial username and password.
      Click link in the email to verify your email; Log in system and change the temporary password.
 
-## AdminWeb Configuration
-AdminWeb allows for a lot of flexibility in configing the system. 
+## WebFramework Configuration
+WebFramework allows for a lot of flexibility in configing the system. 
 
 ### Change configuration on the fly through the setting page. It has these properties:
 
@@ -75,9 +75,9 @@ You can have hibernate.security.cfg.config, hibernate.log.cfg.config and hiberna
 The encrypted connectionstrings in web.config also has three corresponding connectionstrings:
 ```XML
 <connectionStrings>
-	<add name="SecurityDB" connectionString="Data Source=|DataDirectory|AdminWeb.sdf;Enlist=false;" providerName="System.Data.SqlServerCe.4.0" />
-	<add name="LogDB" connectionString="Data Source=|DataDirectory|AdminWeb.sdf;Enlist=false;" providerName="System.Data.SqlServerCe.4.0" />
-	<add name="AppDB" connectionString="Data Source=|DataDirectory|AdminWeb.sdf;Enlist=false;" providerName="System.Data.SqlServerCe.4.0" />
+	<add name="SecurityDB" connectionString="Data Source=|DataDirectory|WebFramework.sdf;Enlist=false;" providerName="System.Data.SqlServerCe.4.0" />
+	<add name="LogDB" connectionString="Data Source=|DataDirectory|WebFramework.sdf;Enlist=false;" providerName="System.Data.SqlServerCe.4.0" />
+	<add name="AppDB" connectionString="Data Source=|DataDirectory|WebFramework.sdf;Enlist=false;" providerName="System.Data.SqlServerCe.4.0" />
 </connectionStrings>
 ```
 #Screenshots
