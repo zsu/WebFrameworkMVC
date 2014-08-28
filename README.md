@@ -13,7 +13,7 @@ Some of the features of WebFramework are:
   * Messaging
   * Web Server management(Refresh Cache, Restart AppPool, Application offline scheduler)
 
-###Live Demo: https://adminweb.azurewebsites.net/
+###Live Demo: https://webframeworkmvc.azurewebsites.net/
 Login: user1/Abc123
 
 #Getting started with WebFramework
