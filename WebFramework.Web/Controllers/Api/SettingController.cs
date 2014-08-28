@@ -26,7 +26,7 @@ namespace Web.Controllers.Api
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
             var query = _service.Query();
-            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME)
+            if (Constants.SHOULD_FILTER_BY_APP)
                 query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
             var data = Web.Infrastructure.Util.GetGridData<Setting>(searchModel, query);
             var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Value }).ToList(); 
@@ -62,7 +62,7 @@ namespace Web.Controllers.Api
             if (string.IsNullOrEmpty(item.Value))
                 return BadRequest("Setting value cannot be empty.");
             item.Name = item.Name.Trim();
-            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME && !item.Name.StartsWith(App.Common.Util.ApplicationConfiguration.AppAcronym))
+            if (Constants.SHOULD_FILTER_BY_APP && !item.Name.StartsWith(App.Common.Util.ApplicationConfiguration.AppAcronym))
                 return BadRequest(string.Format("Name must start with '{0}.'", App.Common.Util.ApplicationConfiguration.AppAcronym));
             item.Value = string.IsNullOrEmpty(item.Value) ? null : item.Value.Trim();
             if (_service.SettingExists(item.Name))

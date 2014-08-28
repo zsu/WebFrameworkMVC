@@ -74,7 +74,7 @@ namespace Web.Controllers.Api
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
             var query = _service.Query();
-            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME)
+            if (Constants.SHOULD_FILTER_BY_APP)
                 query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
             var data = Util.GetGridData<Logs>(searchModel, query);
             var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList(); 
