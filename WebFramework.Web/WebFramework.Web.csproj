@@ -486,6 +486,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\PublishProfiles\WebFramework.pubxml" />
+    <None Include="Properties\PublishProfiles\WebFrameworkMVC - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\WebFrameworkMVC - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap-confirmation.js" />
     <Content Include="Scripts\bootstrap.js" />

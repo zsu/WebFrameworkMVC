@@ -25,7 +25,10 @@ namespace Web.Controllers.Api
         // GET api/setting
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = Web.Infrastructure.Util.GetGridData<Setting>(searchModel, _service.Query());
+            var query = _service.Query();
+            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME)
+                query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
+            var data = Web.Infrastructure.Util.GetGridData<Setting>(searchModel, query);
             var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Value }).ToList(); 
             var grid = new JqGridModel
             {
@@ -59,6 +62,8 @@ namespace Web.Controllers.Api
             if (string.IsNullOrEmpty(item.Value))
                 return BadRequest("Setting value cannot be empty.");
             item.Name = item.Name.Trim();
+            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME && !item.Name.StartsWith(App.Common.Util.ApplicationConfiguration.AppAcronym))
+                return BadRequest(string.Format("Name must start with '{0}.'", App.Common.Util.ApplicationConfiguration.AppAcronym));
             item.Value = string.IsNullOrEmpty(item.Value) ? null : item.Value.Trim();
             if (_service.SettingExists(item.Name))
                 return BadRequest(string.Format("Permission {0} already exists.", item.Name));

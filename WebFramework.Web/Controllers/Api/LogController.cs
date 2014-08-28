@@ -73,7 +73,10 @@ namespace Web.Controllers.Api
         [Authorize(Roles = Constants.ROLE_ADMIN)]
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = Util.GetGridData<Logs>(searchModel, _service.Query());
+            var query = _service.Query();
+            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME)
+                query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
+            var data = Util.GetGridData<Logs>(searchModel, query);
             var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList(); 
             var grid = new JqGridModel
             {

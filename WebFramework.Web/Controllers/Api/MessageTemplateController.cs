@@ -29,7 +29,10 @@ namespace Web.Controllers.Api
         // GET api/MessageTemplate
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = Web.Infrastructure.Util.GetGridData<MessageTemplate>(searchModel, _service.Query());
+            var query = _service.Query();
+            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME)
+                query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
+            var data = Web.Infrastructure.Util.GetGridData<MessageTemplate>(searchModel, query);
             var grid = new JqGridModel
             {
                 total = data.TotalPage,
@@ -60,6 +63,8 @@ namespace Web.Controllers.Api
             if (string.IsNullOrEmpty(item.Name))
                 return BadRequest("MessageTemplate name cannot be empty.");
             item.Name = item.Name.Trim();
+            if (Constants.IS_SETTING_KEY_START_WITH_APPNAME && !item.Name.StartsWith(App.Common.Util.ApplicationConfiguration.AppAcronym))
+                return BadRequest(string.Format("Name must start with '{0}.'", App.Common.Util.ApplicationConfiguration.AppAcronym));
             if (_service.Exists(item.Name))
                 return BadRequest(string.Format("Permission {0} already exists.", item.Name));
             _service.Add(item);

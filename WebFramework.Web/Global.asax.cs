@@ -459,10 +459,11 @@ namespace Web
             if (!string.IsNullOrWhiteSpace(userEmail))
             {
                 IUserService userService = IoC.GetService<IUserService>();
-                var account = userService.FindBy(x => x.Username == userEmail);
+                string username = userEmail.Substring(0, userEmail.IndexOf('@') > 0 ? userEmail.IndexOf('@') : userEmail.Length);
+                var account = userService.FindBy(x => x.Username == username || x.Email == userEmail);
                 if (account == null)
                 {
-                    NhUserAccount user = new NhUserAccount() { Username = userEmail, Email = userEmail, HashedPassword = "Abc123$", FirstName = "Admin" };
+                    NhUserAccount user = new NhUserAccount() { Username = username, Email = userEmail, HashedPassword = "Abc123$", FirstName = "Admin" };
                     account = userService.CreateAccountWithTempPassword(user);
                 }
 
