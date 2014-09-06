@@ -47,7 +47,7 @@ Login: user1/Abc123
      Click link in the email to verify your email; Log in system and change the temporary password.
 
 ## WebFrameworkMVC Configuration
-WebFramework allows for a lot of flexibility in configing the system. 
+WebFrameworkMVC allows for a lot of flexibility in configing the system. 
 
 ### Change configuration on the fly through the setting page. It has these properties:
 
