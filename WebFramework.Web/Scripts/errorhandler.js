@@ -3,7 +3,7 @@
 //var popUpAppender = new log4javascript.PopUpAppender();
 //log.addAppender(popUpAppender);
 //add the quintessential Ajax appender
-var ajaxAppender = new log4javascript.AjaxAppender("api/log/");
+var ajaxAppender = new log4javascript.AjaxAppender(baseUrl + "api/log/");
 ajaxAppender.setLayout(new log4javascript.JsonLayout());
 ajaxAppender.addHeader("Content-Type", "application/json; charset=utf-8");
 log.addAppender(ajaxAppender);

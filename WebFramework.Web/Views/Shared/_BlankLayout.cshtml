@@ -9,11 +9,12 @@
     <title>@ViewBag.Title - @Util.ApplicationConfiguration.AppAcronym</title>
     @Styles.Render("~/Content/css")
     <link href="@Url.Content("~/Content/themes/redmond/jquery-ui.css")" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+    var baseUrl = '@Url.Content("~/")';
+    </script>    
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/log4javascript");
-    <script type="text/javascript">
-        var baseUrl = '@Url.Content("~/")';
-    </script>
+
 
 </head>
 <body>
