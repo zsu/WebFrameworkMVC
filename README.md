@@ -16,7 +16,7 @@ Some of the features of WebFramework are:
 ###Live Demo: https://webframeworkmvc.azurewebsites.net/
 Login: user1/Abc123
 
-#Getting started with WebFramework
+#Getting started with WebFrameworkMVC
 
   * Restore Nuget package
   * Build solution
@@ -46,8 +46,8 @@ Login: user1/Abc123
      You will receive emails regarding the initial username and password.
      Click link in the email to verify your email; Log in system and change the temporary password.
 
-## WebFramework Configuration
-WebFramework allows for a lot of flexibility in configing the system. 
+## WebFrameworkMVC Configuration
+WebFrameworkMVC allows for a lot of flexibility in configing the system. 
 
 ### Change configuration on the fly through the setting page. It has these properties:
 
