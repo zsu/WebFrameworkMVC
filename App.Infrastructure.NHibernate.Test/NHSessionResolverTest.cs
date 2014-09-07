@@ -9,7 +9,10 @@ using App.Infrastructure.NHibernate.Test.OrdersDomain;
 using App.Infrastructure.NHibernate.Test.HRDomain.Domain;
 using NHibernate.Tool.hbm2ddl;
 using NHibernate.Cfg;
-using System.Data.SQLite;
+using log4net.Config;
+using System.IO;
+using App.Common;
+using NHibernate.Dialect;
 
 namespace App.Infrastructure.NHibernate.Test
 {
@@ -27,9 +30,8 @@ namespace App.Infrastructure.NHibernate.Test
         private TestContext testContextInstance;
         private static ISessionFactory _ordersFactory;
         private static ISessionFactory _hrFactory;
-        private static SQLiteConnection _connection;
-     private const string ConnectionString = "Data Source=:memory:;Version=3;New=True;";
-       /// <summary>
+        private const string ConnectionString = @"Data Source=Test.sdf";
+        /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
         ///</summary>
@@ -53,27 +55,40 @@ namespace App.Infrastructure.NHibernate.Test
         [ClassInitialize()]
         public static void MyClassInitialize(TestContext testContext)
         {
-           _ordersFactory = Fluently.Configure()
-                  .Database(SQLiteConfiguration.Standard
-                  .ConnectionString(((ConnectionStringBuilder cs) => cs.Is(ConnectionString))))
-                  .Mappings(mappings => mappings.FluentMappings.AddFromAssembly(typeof(Order).Assembly).ExportTo("."))
-                  .ExposeConfiguration(x => new SchemaExport(x).Execute(false, true, false, GetConnection(), null))
-                  .BuildSessionFactory();
+            XmlConfigurator.ConfigureAndWatch(new FileInfo(Util.LogConfigFilePath));
+            if (File.Exists("Test.sdf")) File.Delete("Test.sdf");
+            using (var engine = new System.Data.SqlServerCe.SqlCeEngine(ConnectionString))
+            {
+                engine.CreateDatabase();
+            }
+            var cnf = Fluently.Configure()
+            .Database(MsSqlCeConfiguration.Standard
+            .ConnectionString(((ConnectionStringBuilder cs) => cs.Is(ConnectionString)))
+            .Dialect<MsSqlCe40Dialect>())
+            .Mappings(mappings => mappings.FluentMappings.AddFromAssembly(typeof(Order).Assembly).ExportTo("."))
+            .ExposeConfiguration(x => new SchemaExport(x).Execute(false, true, false));//, GetConnection(), null));
+            //var config = cnf.BuildConfiguration()
+            //    .SetProperty(NHibernateCfg.Environment.ReleaseConnections, "on_close");
+            _ordersFactory = cnf.BuildConfiguration().BuildSessionFactory();
 
-            _hrFactory = Fluently.Configure()
-                  .Database(SQLiteConfiguration.Standard
-                  .ConnectionString(((ConnectionStringBuilder cs) => cs.Is(ConnectionString))))
-                  .Mappings(mappings => mappings.FluentMappings.AddFromAssembly(typeof(SalesPerson).Assembly).ExportTo("."))
-                  .ExposeConfiguration(x => new SchemaExport(x).Execute(false, true, false, GetConnection(),null))
-                  .BuildSessionFactory();
+            cnf = Fluently.Configure()
+            .Database(MsSqlCeConfiguration.Standard
+            .ConnectionString(((ConnectionStringBuilder cs) => cs.Is(ConnectionString)))
+            .Dialect<MsSqlCe40Dialect>())
+            .Mappings(mappings => mappings.FluentMappings.AddFromAssembly(typeof(SalesPerson).Assembly).ExportTo("."))
+            .ExposeConfiguration(x => new SchemaExport(x).Execute(false, true, false));//, GetConnection(), null));
+            //config = cnf.BuildConfiguration()
+            //    .SetProperty(NHibernateCfg.Environment.ReleaseConnections, "on_close"); 
+            _hrFactory = cnf.BuildConfiguration().BuildSessionFactory();
         }
         //
         //Use ClassCleanup to run code after all tests in a class have run
         [ClassCleanup()]
         public static void MyClassCleanup()
         {
-            if (_connection != null)
-                _connection.Dispose();
+            log4net.LogManager.Shutdown();
+            _ordersFactory.Dispose();
+            _hrFactory.Dispose();
         }
         //
         //Use TestInitialize to run code before running each test
@@ -148,15 +163,6 @@ namespace App.Infrastructure.NHibernate.Test
             var resolved = resolver.GetFactoryFor<SalesPerson>();
             Assert.IsNotNull(resolved);
             Assert.ReferenceEquals(resolved, _hrFactory);
-        }
-        private static SQLiteConnection GetConnection()
-        {
-            if (_connection == null)
-            {
-                _connection = new SQLiteConnection(ConnectionString);
-                _connection.Open();
-            }
-            return _connection;
         }
     }
 }
