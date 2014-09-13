@@ -10,6 +10,7 @@ using System.Linq.Dynamic;
 using App.Common.InversionOfControl;
 using App.Mvc.JqGrid;
 using System.Text;
+using System.IO;
 
 namespace Web.Controllers.Api
 {
@@ -35,7 +36,34 @@ namespace Web.Controllers.Api
             };
             return grid;
         }
+        [Route("api/permission/exporttoexcel")]
+        [HttpGet]
+        public dynamic ExportToExcel([FromUri]JqGridSearchModel searchModel)
+        {
+            var query = _service.Query();
+            //query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
+            searchModel.rows = 0;
+            var data = Web.Infrastructure.Util.GetGridData<Permission>(searchModel, query);
+            var dataList = data.Items.Select(x => new { x.Name, x.Description }).ToList();
+            string filePath = Web.Infrastructure.ExporterManager.Export("permission", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
+            HttpResponseMessage result = null;
 
+            if (!File.Exists(filePath))
+            {
+                result = Request.CreateResponse(HttpStatusCode.Gone);
+            }
+            else
+            {
+                result = Request.CreateResponse(HttpStatusCode.OK);
+                result.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
+                result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+                result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(filePath);
+                result.Content.Headers.ContentLength = new FileInfo(filePath).Length;
+
+            }
+            return result;
+        }
         // GET api/permission/5
         public IHttpActionResult Get(Guid id)
         {

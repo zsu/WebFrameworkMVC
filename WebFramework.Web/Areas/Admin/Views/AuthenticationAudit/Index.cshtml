@@ -71,6 +71,7 @@
                             searchoptions: { sopt: ['eq', 'ne'] },
                             //sorttype: 'text',
                             searchrules: { required: true, custom: true, custom_func: validateGuid },
+                            hidden:true,
                             width: 100
                         }, {
                             name: 'Application',
@@ -113,19 +114,19 @@
                     },//search parameters
                     { recreateForm: true }
                     );
-                    @*$(grid).jqGrid('navButtonAdd', "#pager",
+                    $(grid).jqGrid('navButtonAdd', "#pager",
                     //{ caption: "Clear", title: "Clear Search", buttonicon: 'ui-icon-arrowreturnthick-1-w', onClickButton: function () { $(grid)[0].clearToolbar(); } },
                     {
-                        caption: ""/*"Show"*/, buttonicon: "ui-icon-zoomin", title: "View Detail",
+                        caption: ""/*"Show"*/, buttonicon: "ui-icon-disk", title: "Export to Excel",
                         onClickButton: function () {
-                            var rowid = $(grid).jqGrid('getGridParam', 'selrow');
-                            if (!rowid) {
-                                showSelectRowAlert(this.id);
-                                return;
-                            }
-                            window.location = '@Url.Action("Detail", "Log")?id=' + rowid;//$(grid).jqGrid('getCell', rowid, 'dataUrl')
+                            var postData = $(grid).jqGrid('getGridParam', 'postData');
+                            var url = API_URL + "exporttoexcel/?";
+                            $.each(postData, function (key, value) {
+                                url += ((url.substr(-1) === "?" ? "" : "&") + key + "=" + encodeURIComponent(value));
+                            });
+                            window.open(url, '_blank', '');
                         }
-                    });*@
+                    });
                     $.extend($.jgrid.edit, {
                         afterSubmit: function (response, postdata) {
                             var res = $.parseJSON(response.responseText);

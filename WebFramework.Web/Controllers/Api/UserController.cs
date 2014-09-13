@@ -15,6 +15,7 @@ using BrockAllen.MembershipReboot;
 using Web.Areas.Admin.Models;
 using System.Web.Http.ModelBinding;
 using App.Mvc.ModelBinder;
+using System.IO;
 
 namespace Web.Controllers.Api
 {
@@ -116,7 +117,68 @@ namespace Web.Controllers.Api
             };
             return grid;
         }
+        [Route("api/user/exporttoexcel")]
+        [HttpGet]
+        public dynamic ExportToExcel([FromUri]JqGridSearchModel searchModel)
+        {
+            var query = _userService.Query();
+            if (!User.IsInRole(Constants.ROLE_ADMIN))
+            {
+                query = query.Where(x => !x.Roles.Any(y => y.Name == Constants.ROLE_ADMIN));
+            }
+            searchModel.rows = 0;
+            var data = Web.Infrastructure.Util.GetGridData<NhUserAccount>(searchModel, query);
+            var dataList = data.Items.Select(x => new
+            {
+                x.Tenant,
+                x.Username,
+                x.Email,
+                x.FirstName,
+                x.LastName,
+                x.LastUpdated,
+                x.Created,
+                x.LastLogin,
+                x.IsAccountClosed,
+                x.AccountClosed,
+                x.IsLoginAllowed,
+                x.LastFailedLogin,
+                x.FailedLoginCount,
+                x.PasswordChanged,
+                x.RequiresPasswordReset,
+                x.IsAccountVerified,
+                x.LastFailedPasswordReset,
+                x.FailedPasswordResetCount,
+                //x.MobileCode,
+                //x.MobileCodeSent,
+                x.MobilePhoneNumber,
+                //x.MobilePhoneNumberChanged,
+                //x.AccountTwoFactorAuthMode,
+                //x.CurrentTwoFactorAuthStatus,
+                x.VerificationKey,
+                x.VerificationKeySent,
+                x.VerificationPurpose/*,
+                x.VerificationStorage,
+                x.HashedPassword*/
+            }).ToList();
+            string filePath = Web.Infrastructure.ExporterManager.Export("user", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
+            HttpResponseMessage result = null;
 
+            if (!File.Exists(filePath))
+            {
+                result = Request.CreateResponse(HttpStatusCode.Gone);
+            }
+            else
+            {
+                result = Request.CreateResponse(HttpStatusCode.OK);
+                result.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
+                result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+                result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(filePath);
+                result.Content.Headers.ContentLength = new FileInfo(filePath).Length;
+
+            }
+            return result;
+        }
         // GET api/role/5
         public IHttpActionResult Get(Guid id)
         {
@@ -300,8 +362,6 @@ namespace Web.Controllers.Api
         {
             if (id == default(Guid))
                 return BadRequest("User id cannot be empty.");
-            if (!HasPermission(id, Constants.ROLE_ADMIN))
-                return Unauthorized(); 
             NhUserAccount user = _userService.GetById(id);
             List<Role> allRoles = _roleService.GetAllRoles();
             if (!User.IsInRole(Constants.ROLE_ADMIN))
@@ -340,6 +400,52 @@ namespace Web.Controllers.Api
                 }).ToArray()
             };
             return grid;
+        }
+        [Route("api/userroles/exporttoexcel")]
+        [HttpGet]
+        public dynamic ExportToExcelUserRoles(Guid id, [FromUri]JqGridSearchModel searchModel)
+        {
+            if (id == default(Guid))
+                return BadRequest("User id cannot be empty.");
+            searchModel.rows = 0;
+            int startRow = (searchModel.page * searchModel.rows) + 1;
+            int skip = (searchModel.page > 0 ? searchModel.page - 1 : 0) * searchModel.rows;
+            if (!HasPermission(id, Constants.ROLE_ADMIN))
+                return Unauthorized();
+            NhUserAccount user = _userService.GetById(id);
+            List<Role> allRoles = _roleService.GetAllRoles();
+            if (!User.IsInRole(Constants.ROLE_ADMIN))
+                allRoles = allRoles.Where(x => x.Name != Constants.ROLE_ADMIN).ToList();
+            List<UserRoleModel> userRoles = new List<UserRoleModel>();
+            foreach (Role role in allRoles)
+            {
+                bool hasRole = user.Roles.AsQueryable().Any(x => x.Id == role.Id);
+                //userRoleEditModel.Roles.Add(new UserRoleModel { UserId=id, Role = role, HasRole = hasRole });
+                userRoles.Add(new UserRoleModel { Id = role.Id, Name = role.Name, Description = role.Description, HasRole = hasRole });
+            }
+
+            var query = userRoles.AsQueryable();
+            var data = Web.Infrastructure.Util.GetGridData<UserRoleModel>(searchModel, query);
+            var dataList = data.Items.Select(x => new { x.Name, x.Description, x.HasRole }).ToList();
+
+            string filePath = Web.Infrastructure.ExporterManager.Export("userroles", Web.Infrastructure.ExporterType.CSV, dataList, "");
+            HttpResponseMessage result = null;
+
+            if (!File.Exists(filePath))
+            {
+                result = Request.CreateResponse(HttpStatusCode.Gone);
+            }
+            else
+            {
+                result = Request.CreateResponse(HttpStatusCode.OK);
+                result.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
+                result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+                result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(filePath);
+                result.Content.Headers.ContentLength = new FileInfo(filePath).Length;
+
+            }
+            return result;
         }
         private bool HasPermission(Guid userId, string targetRole)
         {

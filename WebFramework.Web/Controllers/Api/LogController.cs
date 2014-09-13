@@ -14,9 +14,11 @@ using WebFramework.Data.Domain;
 using App.Common.InversionOfControl;
 using System.Text;
 using Web.Infrastructure;
+using System.IO;
 
 namespace Web.Controllers.Api
 {
+    [Authorize(Roles = Constants.ROLE_ADMIN)]
     public class LogController : ApiController
     {
         private ILogService _service;
@@ -31,6 +33,7 @@ namespace Web.Controllers.Api
         //}
 
         // POST api/log
+        [AllowAnonymous]
         public HttpResponseMessage PostJavascriptLog(LogEntry[] data)
         {
             LogLevel logLevel = LogLevel.Debug;
@@ -70,7 +73,6 @@ namespace Web.Controllers.Api
             public string Url;
             public string Message;
         }
-        [Authorize(Roles = Constants.ROLE_ADMIN)]
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
             var query = _service.Query();
@@ -87,6 +89,36 @@ namespace Web.Controllers.Api
             };
 
             return grid;
+        }
+        [Route("api/log/exporttoexcel")]
+        [HttpGet]
+        public dynamic ExportToExcel([FromUri]JqGridSearchModel searchModel)
+        {
+            var query = _service.Query();
+            if (Constants.SHOULD_FILTER_BY_APP)
+                query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
+            searchModel.rows = 0;
+            var data = Util.GetGridData<Logs>(searchModel, query);
+            var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList();
+            string filePath = ExporterManager.Export("Logs", ExporterType.CSV, dataList.ToList(), "");
+            HttpResponseMessage result = null;
+
+            if (!File.Exists(filePath))
+            {
+                result = Request.CreateResponse(HttpStatusCode.Gone);
+            }
+            else
+            {
+                result = Request.CreateResponse(HttpStatusCode.OK);
+                result.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
+                result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+                result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(filePath);
+                result.Content.Headers.ContentLength = new FileInfo(filePath).Length;
+
+            }
+
+            return result;
         }
     }
 }

@@ -138,7 +138,8 @@ namespace Web.Infrastructure
             if (!string.IsNullOrWhiteSpace(searchModel.sidx))
                 data = data.OrderBy(searchModel.sidx + " " + searchModel.sord);
             data = data.Skip(skip);
-            data = data.Take(searchModel.rows == 0 ? totalRecords : searchModel.rows);
+            if (totalRecords > 0)
+                data = data.Take(searchModel.rows == 0 ? totalRecords : searchModel.rows);
             var totalPages = (int)Math.Ceiling((float)totalRecords / searchModel.rows);
 
             return new GridModel<T>
