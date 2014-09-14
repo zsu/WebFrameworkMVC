@@ -26,7 +26,7 @@ namespace Web.Controllers.Api
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
             var data = Web.Infrastructure.Util.GetGridData<Permission>(searchModel, _service.Query());
-            var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Description }).ToList(); 
+            var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Description }).ToList();
             var grid = new JqGridModel
             {
                 total = data.TotalPage,
@@ -40,14 +40,21 @@ namespace Web.Controllers.Api
         [HttpGet]
         public dynamic ExportToExcel([FromUri]JqGridSearchModel searchModel)
         {
-            var query = _service.Query();
-            //query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
-            searchModel.rows = 0;
-            var data = Web.Infrastructure.Util.GetGridData<Permission>(searchModel, query);
-            var dataList = data.Items.Select(x => new { x.Name, x.Description }).ToList();
-            string filePath = Web.Infrastructure.ExporterManager.Export("permission", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
+            string filePath = null;
             HttpResponseMessage result = null;
-
+            try
+            {
+                var query = _service.Query();
+                //query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
+                searchModel.rows = 0;
+                var data = Web.Infrastructure.Util.GetGridData<Permission>(searchModel, query);
+                var dataList = data.Items.Select(x => new { x.Name, x.Description }).ToList();
+                filePath = Web.Infrastructure.ExporterManager.Export("permission", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
+            }
+            catch (Exception ex)
+            {
+                return Web.Infrastructure.Util.DisplayExportError(ex);
+            }
             if (!File.Exists(filePath))
             {
                 result = Request.CreateResponse(HttpStatusCode.Gone);
@@ -98,7 +105,7 @@ namespace Web.Controllers.Api
             StringBuilder message = new StringBuilder();
             if (id == default(Guid))
                 return BadRequest("Permission id cannot be empty.");
-            if (item==null)
+            if (item == null)
             {
                 return BadRequest("Permission cannot be empty.");
             }
@@ -108,10 +115,10 @@ namespace Web.Controllers.Api
             }
             item.Id = id;
             item.Name = item.Name.Trim();
-            item.Description=string.IsNullOrEmpty(item.Description)?null:item.Description.Trim();
+            item.Description = string.IsNullOrEmpty(item.Description) ? null : item.Description.Trim();
             _service.UpdatePermission(item);
             message.AppendFormat("Permission {0}  is saved successflly.", item.Name);
-            return Json<object>(new { Success = true, Message = message.ToString(), RowId=item.Id });
+            return Json<object>(new { Success = true, Message = message.ToString(), RowId = item.Id });
 
         }
 

@@ -30,7 +30,7 @@ namespace Web.Controllers.Api
             if (Constants.SHOULD_FILTER_BY_APP)
                 query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
             var data = Web.Infrastructure.Util.GetGridData<Setting>(searchModel, query);
-            var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Value }).ToList(); 
+            var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Value }).ToList();
             var grid = new JqGridModel
             {
                 total = data.TotalPage,
@@ -44,15 +44,22 @@ namespace Web.Controllers.Api
         [HttpGet]
         public dynamic ExportToExcel([FromUri]JqGridSearchModel searchModel)
         {
-            var query = _service.Query();
-            if (Constants.SHOULD_FILTER_BY_APP)
-                query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
-            searchModel.rows = 0;
-            var data = Web.Infrastructure.Util.GetGridData<Setting>(searchModel, query);
-            var dataList = data.Items.Select(x => new { x.Name, x.Value }).ToList();
-            string filePath = Web.Infrastructure.ExporterManager.Export("setting", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
+            string filePath = null;
             HttpResponseMessage result = null;
-
+            try
+            {
+                var query = _service.Query();
+                if (Constants.SHOULD_FILTER_BY_APP)
+                    query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
+                searchModel.rows = 0;
+                var data = Web.Infrastructure.Util.GetGridData<Setting>(searchModel, query);
+                var dataList = data.Items.Select(x => new { x.Name, x.Value }).ToList();
+                filePath = Web.Infrastructure.ExporterManager.Export("setting", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
+            }
+            catch (Exception ex)
+            {
+                return Web.Infrastructure.Util.DisplayExportError(ex);
+            }
             if (!File.Exists(filePath))
             {
                 result = Request.CreateResponse(HttpStatusCode.Gone);
@@ -107,7 +114,7 @@ namespace Web.Controllers.Api
             StringBuilder message = new StringBuilder();
             if (id == default(Guid))
                 return BadRequest("Setting id cannot be empty.");
-            if (item==null)
+            if (item == null)
             {
                 return BadRequest("Setting cannot be empty.");
             }
@@ -121,10 +128,10 @@ namespace Web.Controllers.Api
             }
             item.Id = id;
             item.Name = item.Name.Trim();
-            item.Value=string.IsNullOrEmpty(item.Value)?null:item.Value.Trim();
+            item.Value = string.IsNullOrEmpty(item.Value) ? null : item.Value.Trim();
             _service.UpdateSetting(item);
             message.AppendFormat("Setting {0}  is saved successflly.", item.Name);
-            return Json<object>(new { Success = true, Message = message.ToString(), RowId=item.Id });
+            return Json<object>(new { Success = true, Message = message.ToString(), RowId = item.Id });
 
         }
 
