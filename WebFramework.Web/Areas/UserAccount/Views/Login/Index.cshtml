@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Log in";
 }
-
 <h2>@ViewBag.Title</h2>
 <div class="row">
     <div class="col-md-12">
@@ -44,9 +43,11 @@
                         <input type="submit" value="Log in" class="btn btn-info" />
                     </div>
                 </div>
-                <p>
-                    @Html.ActionLink("Register", "Index", "Register") if you don't have a local account.
-                </p>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ActionLink("Register", "Index", "Register") if you don't have a local account.
+                    </div>
+                </div>
             }
         </section>
     </div>
