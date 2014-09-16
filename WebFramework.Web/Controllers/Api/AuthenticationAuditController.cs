@@ -17,6 +17,7 @@ using System.IO;
 
 namespace Web.Controllers.Api
 {
+    [Authorize(Roles = Constants.ROLE_ADMIN)]
     public class AuthenticationAuditController : ApiController
     {
         private IAuthenticationAuditService _service;
@@ -25,7 +26,6 @@ namespace Web.Controllers.Api
             _service = IoC.GetService<IAuthenticationAuditService>();
         }
 
-        [Authorize(Roles = Constants.ROLE_ADMIN)]
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
             var query = _service.Query();
