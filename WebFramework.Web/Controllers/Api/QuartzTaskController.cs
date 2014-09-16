@@ -10,12 +10,12 @@ using System.Linq.Dynamic;
 using App.Common.InversionOfControl;
 using App.Mvc.JqGrid;
 using System.Text;
-using WebFramework.Data.Domain;
 using App.Common.Tasks;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
 using Web.Models;
+using System.IO;
 
 namespace Web.Controllers.Api
 {
@@ -28,38 +28,55 @@ namespace Web.Controllers.Api
         // GET api/quartztask
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            // note - these queries require "using System.Dynamic.Linq" library
-            IQueryable<QuartzTriggerModel> dataSource = Query().Select(x => new QuartzTriggerModel
-            {
-                TriggerGroup = x.Key.Group,
-                TriggerName = x.Key.Name,
-                JobGroup = x.JobKey.Group,
-                JobName = x.JobKey.Name,
-                Description = x.Description,
-                CronExpression = ((ICronTrigger)x).CronExpressionString,
-                TimeZone = ((ICronTrigger)x).TimeZone.DisplayName,
-                State = GetScheduler().GetTriggerState(x.Key).ToString(),
-                PreviousTimeUtc = x.GetPreviousFireTimeUtc().HasValue ? x.GetPreviousFireTimeUtc().Value.DateTime : (DateTime?)null,
-                StartTimeUtc = x.StartTimeUtc.DateTime,
-                EndTimeUtc = x.EndTimeUtc.HasValue ? x.EndTimeUtc.Value.DateTime : (DateTime?)null,
-                Parameters = string.Join(",\n", x.JobDataMap.Select(kv => kv.Key.ToString() + ":=" + kv.Value.ToString()).ToArray())
-            });
-            var data = Web.Infrastructure.Util.GetGridData<QuartzTriggerModel>(searchModel, dataSource);
-            var dataList = data.Items.ToList(); 
+            int totalRecords;
+            var dataList = GetQuery(searchModel, out totalRecords);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / searchModel.rows);
+
             var grid = new JqGridModel
             {
-                total = data.TotalPage,
-                page = data.CurrentPage,
-                records = data.TotalNumber,
+                total = totalPages,
+                page = searchModel.page,
+                records = totalRecords,
                 rows = dataList.Select(x => new
                 {
                     id = x.TriggerGroup + "," + x.TriggerName,
                     cell = new object[] { x.TriggerGroup + "," + x.TriggerName, x.TriggerGroup, x.TriggerName, x.JobGroup, x.JobName, x.Description, x.CronExpression, x.TimeZone, x.State, x.PreviousTimeUtc, x.StartTimeUtc, x.EndTimeUtc, x.Parameters }
                 }).ToArray()
             };
+
             return grid;
         }
-
+        [Route("api/quartztask/exporttoexcel")]
+        [HttpGet]
+        public dynamic ExportToExcel([FromUri]JqGridSearchModel searchModel)
+        {
+            string filePath = null;
+            HttpResponseMessage result = null;
+            int totalRecords;
+            try
+            {
+                var dataList = GetQuery(searchModel, out totalRecords);
+                filePath = Web.Infrastructure.ExporterManager.Export("QuartzTasks", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
+            }
+            catch (Exception ex)
+            {
+                return Web.Infrastructure.Util.DisplayExportError(ex);
+            }
+            if (!File.Exists(filePath))
+            {
+                result = Request.CreateResponse(HttpStatusCode.Gone);
+            }
+            else
+            {
+                result = Request.CreateResponse(HttpStatusCode.OK);
+                result.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
+                result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+                result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(filePath);
+                result.Content.Headers.ContentLength = new FileInfo(filePath).Length;
+            }
+            return result;
+        }
         // GET api/quartztask/5
         public IHttpActionResult Get(Guid id)
         {
@@ -153,7 +170,7 @@ namespace Web.Controllers.Api
             }
             ITrigger newTrigger = TriggerBuilder.Create()
             .WithIdentity(item.TriggerName, item.TriggerGroup)
-            .WithCronSchedule(item.CronExpression,x=>x.InTimeZone(TimeZoneInfo.Utc))
+            .WithCronSchedule(item.CronExpression, x => x.InTimeZone(TimeZoneInfo.Utc))
             .ForJob(item.JobName, item.JobGroup)
             .UsingJobData(dataMap)
             .WithDescription(item.Description)
@@ -207,6 +224,30 @@ namespace Web.Controllers.Api
                            from triggerKey in scheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup())
                            select scheduler.GetTrigger(triggerKey);
             return triggers.AsQueryable<ITrigger>();
+        }
+        private IQueryable<QuartzTriggerModel> GetQuery(JqGridSearchModel searchModel, out int totalRecords)
+        {
+            var query = Query().Select(x => new QuartzTriggerModel
+            {
+                TriggerGroup = x.Key.Group,
+                TriggerName = x.Key.Name,
+                JobGroup = x.JobKey.Group,
+                JobName = x.JobKey.Name,
+                Description = x.Description,
+                CronExpression = ((ICronTrigger)x).CronExpressionString,
+                TimeZone = ((ICronTrigger)x).TimeZone.DisplayName,
+                State = GetScheduler().GetTriggerState(x.Key).ToString(),
+                PreviousTimeUtc = x.GetPreviousFireTimeUtc().HasValue ? x.GetPreviousFireTimeUtc().Value.DateTime : (DateTime?)null,
+                StartTimeUtc = x.StartTimeUtc.DateTime,
+                EndTimeUtc = x.EndTimeUtc.HasValue ? x.EndTimeUtc.Value.DateTime : (DateTime?)null,
+                Parameters = string.Join(",\n", x.JobDataMap.Select(kv => kv.Key.ToString() + ":=" + kv.Value.ToString()).ToArray())
+            }); ;
+            if (Constants.SHOULD_FILTER_BY_APP)
+                query = query.Where(x => x.TriggerGroup == App.Common.Util.ApplicationConfiguration.AppAcronym);
+            searchModel.rows = 0;
+            var data = Web.Infrastructure.Util.GetGridData<QuartzTriggerModel>(searchModel, query);
+            totalRecords = data.TotalNumber;
+            return data.Items;
         }
         private IScheduler GetScheduler()
         {
