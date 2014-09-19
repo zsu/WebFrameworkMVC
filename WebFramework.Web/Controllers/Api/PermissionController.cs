@@ -25,7 +25,7 @@ namespace Web.Controllers.Api
         // GET api/permission
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = Web.Infrastructure.Util.GetGridData<Permission>(searchModel, _service.Query());
+            var data = GetQuery(searchModel);
             var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Description }).ToList();
             var grid = new JqGridModel
             {
@@ -44,10 +44,8 @@ namespace Web.Controllers.Api
             HttpResponseMessage result = null;
             try
             {
-                var query = _service.Query();
-                //query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
                 searchModel.rows = 0;
-                var data = Web.Infrastructure.Util.GetGridData<Permission>(searchModel, query);
+                var data = GetQuery(searchModel);
                 var dataList = data.Items.Select(x => new { x.Name, x.Description }).ToList();
                 filePath = Web.Infrastructure.ExporterManager.Export("permission", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
             }
@@ -134,6 +132,12 @@ namespace Web.Controllers.Api
             else
                 return NotFound();
         }
-
+        private Web.Infrastructure.GridModel<Permission> GetQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        {
+            var query = _service.Query();
+            //query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
+            var data = Web.Infrastructure.Util.GetGridData<Permission>(searchModel, query);
+            return data;
+        }
     }
 }

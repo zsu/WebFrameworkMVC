@@ -35,12 +35,7 @@ namespace Web.Controllers.Api
         // GET api/role
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var query = _userService.Query();
-            if (!User.IsInRole(Constants.ROLE_ADMIN))
-            {
-                query = query.Where(x => !x.Roles.Any(y => y.Name == Constants.ROLE_ADMIN));
-            }
-            var data = Web.Infrastructure.Util.GetGridData<NhUserAccount>(searchModel, query);
+            var data = GetQuery(searchModel);
             var dataList = data.Items.Select(x => new
             {
                 x.ID,
@@ -125,13 +120,8 @@ namespace Web.Controllers.Api
             HttpResponseMessage result = null;
             try
             {
-                var query = _userService.Query();
-                if (!User.IsInRole(Constants.ROLE_ADMIN))
-                {
-                    query = query.Where(x => !x.Roles.Any(y => y.Name == Constants.ROLE_ADMIN));
-                }
                 searchModel.rows = 0;
-                var data = Web.Infrastructure.Util.GetGridData<NhUserAccount>(searchModel, query);
+                var data = GetQuery(searchModel);
                 var dataList = data.Items.Select(x => new
                 {
                     Application = x.Tenant,
@@ -369,21 +359,9 @@ namespace Web.Controllers.Api
         {
             if (id == default(Guid))
                 return BadRequest("User id cannot be empty.");
-            NhUserAccount user = _userService.GetById(id);
-            List<Role> allRoles = _roleService.GetAllRoles();
-            if (!User.IsInRole(Constants.ROLE_ADMIN))
-                allRoles = allRoles.Where(x => x.Name != Constants.ROLE_ADMIN).ToList();
-            //UserRoleEditModel userRoleEditModel = new UserRoleEditModel { User = user };
-            List<UserRoleModel> userRoles = new List<UserRoleModel>();
-            foreach (Role role in allRoles)
-            {
-                bool hasRole = user.Roles.AsQueryable().Any(x => x.Id == role.Id);
-                //userRoleEditModel.Roles.Add(new UserRoleModel { UserId=id, Role = role, HasRole = hasRole });
-                userRoles.Add(new UserRoleModel { Id = role.Id, Name = role.Name, Description = role.Description, HasRole = hasRole });
-            }
-            //note - these queries require "using System.Dynamic.Linq" library
-            IQueryable<UserRoleModel> dataSource = userRoles.AsQueryable();
-            var data = Web.Infrastructure.Util.GetGridData<UserRoleModel>(searchModel, dataSource);
+            if (!HasPermission(id, Constants.ROLE_ADMIN))
+                return Unauthorized();
+            var data = GetUserRolesQuery(id,searchModel);
             var dataList = data.Items.Select(x => new
             {
                 x.Id,
@@ -419,24 +397,9 @@ namespace Web.Controllers.Api
                 if (id == default(Guid))
                     return BadRequest("User id cannot be empty.");
                 searchModel.rows = 0;
-                int startRow = (searchModel.page * searchModel.rows) + 1;
-                int skip = (searchModel.page > 0 ? searchModel.page - 1 : 0) * searchModel.rows;
                 if (!HasPermission(id, Constants.ROLE_ADMIN))
                     return Unauthorized();
-                NhUserAccount user = _userService.GetById(id);
-                List<Role> allRoles = _roleService.GetAllRoles();
-                if (!User.IsInRole(Constants.ROLE_ADMIN))
-                    allRoles = allRoles.Where(x => x.Name != Constants.ROLE_ADMIN).ToList();
-                List<UserRoleModel> userRoles = new List<UserRoleModel>();
-                foreach (Role role in allRoles)
-                {
-                    bool hasRole = user.Roles.AsQueryable().Any(x => x.Id == role.Id);
-                    //userRoleEditModel.Roles.Add(new UserRoleModel { UserId=id, Role = role, HasRole = hasRole });
-                    userRoles.Add(new UserRoleModel { Id = role.Id, Name = role.Name, Description = role.Description, HasRole = hasRole });
-                }
-
-                var query = userRoles.AsQueryable();
-                var data = Web.Infrastructure.Util.GetGridData<UserRoleModel>(searchModel, query);
+                var data = GetUserRolesQuery(id, searchModel);
                 var dataList = data.Items.Select(x => new { x.Name, x.Description, x.HasRole }).ToList();
 
                 filePath = Web.Infrastructure.ExporterManager.Export("userroles", Web.Infrastructure.ExporterType.CSV, dataList, "");
@@ -476,6 +439,38 @@ namespace Web.Controllers.Api
             }
             return allow;
         }
-
+        private Web.Infrastructure.GridModel<NhUserAccount> GetQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        {
+            var query = _userService.Query();
+            if (!User.IsInRole(Constants.ROLE_ADMIN))
+            {
+                query = query.Where(x => !x.Roles.Any(y => y.Name == Constants.ROLE_ADMIN));
+            }
+            var data = Web.Infrastructure.Util.GetGridData<NhUserAccount>(searchModel, query);
+            return data;
+        }
+        private Web.Infrastructure.GridModel<UserRoleModel> GetUserRolesQuery(Guid id, [FromUri] JqGridSearchModel searchModel)
+        {
+            if (id == default(Guid))
+                throw new ArgumentNullException("User id cannot be empty.");
+            int startRow = (searchModel.page * searchModel.rows) + 1;
+            int skip = (searchModel.page > 0 ? searchModel.page - 1 : 0) * searchModel.rows;
+            //if (!HasPermission(id, Constants.ROLE_ADMIN))
+            //    throw new Exception("Unauthorized");
+            NhUserAccount user = _userService.GetById(id);
+            List<Role> allRoles = _roleService.GetAllRoles();
+            if (!User.IsInRole(Constants.ROLE_ADMIN))
+                allRoles = allRoles.Where(x => x.Name != Constants.ROLE_ADMIN).ToList();
+            List<UserRoleModel> userRoles = new List<UserRoleModel>();
+            foreach (Role role in allRoles)
+            {
+                bool hasRole = user.Roles.AsQueryable().Any(x => x.Id == role.Id);
+                //userRoleEditModel.Roles.Add(new UserRoleModel { UserId=id, Role = role, HasRole = hasRole });
+                userRoles.Add(new UserRoleModel { Id = role.Id, Name = role.Name, Description = role.Description, HasRole = hasRole });
+            }
+            var query = userRoles.AsQueryable();
+            var data = Web.Infrastructure.Util.GetGridData<UserRoleModel>(searchModel, query);
+            return data;
+        }
     }
 }

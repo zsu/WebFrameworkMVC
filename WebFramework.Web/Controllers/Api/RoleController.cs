@@ -32,7 +32,7 @@ namespace Web.Controllers.Api
         // GET api/role
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = Web.Infrastructure.Util.GetGridData<Role>(searchModel, _service.Query());
+            var data = GetRoleQuery(searchModel);
             var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Description }).ToList();
             var grid = new JqGridModel
             {
@@ -51,10 +51,8 @@ namespace Web.Controllers.Api
             HttpResponseMessage result = null;
             try
             {
-                var query = _service.Query();
-                //query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
                 searchModel.rows = 0;
-                var data = Web.Infrastructure.Util.GetGridData<Role>(searchModel, query);
+                var data = GetRoleQuery(searchModel);
                 var dataList = data.Items.Select(x => new { x.Name, x.Description }).ToList();
                 filePath = Web.Infrastructure.ExporterManager.Export("role", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
             }
@@ -182,28 +180,13 @@ namespace Web.Controllers.Api
         {
             if (id == default(Guid))
                 return BadRequest("Role id cannot be empty.");
-            Role role = _service.GetById(id);
-            List<Permission> allPermission = _permissionService.GetAllPermissions();
-            List<RolePermissionModel> rolePermissions = new List<RolePermissionModel>();
-            foreach (var permission in allPermission)
-            {
-                bool hasPermission = role.Permissions.AsQueryable().Any(x => x.Id == permission.Id);
-                rolePermissions.Add(new RolePermissionModel { Id = permission.Id, Name = permission.Name, Description = permission.Description, HasPermission = hasPermission });
-            }
-            var data = Web.Infrastructure.Util.GetGridData<RolePermissionModel>(searchModel, rolePermissions.AsQueryable());
-            var dataList = data.Items.Select(x => new
-            {
-                x.Id,
-                x.Name,
-                x.Description,
-                x.HasPermission
-            }).ToList();
+            var data = GetRolePermissionsQuery(id, searchModel);
             var grid = new JqGridModel
             {
                 total = data.TotalPage,
                 page = data.CurrentPage,
                 records = data.TotalNumber,
-                rows = dataList.Select(x => new
+                rows = data.Items.ToList().Select(x => new
                 {
                     id = x.Id,
                     cell = new object[] {
@@ -226,19 +209,7 @@ namespace Web.Controllers.Api
                 if (id == default(Guid))
                     return BadRequest("Role id cannot be empty.");
                 searchModel.rows = 0;
-                int startRow = (searchModel.page * searchModel.rows) + 1;
-                int skip = (searchModel.page > 0 ? searchModel.page - 1 : 0) * searchModel.rows;
-                Role role = _service.GetById(id);
-                List<Permission> allPermission = _permissionService.GetAllPermissions();
-                List<RolePermissionModel> rolePermissions = new List<RolePermissionModel>();
-                foreach (var permission in allPermission)
-                {
-                    bool hasPermission = role.Permissions.AsQueryable().Any(x => x.Id == permission.Id);
-                    rolePermissions.Add(new RolePermissionModel { Id = permission.Id, Name = permission.Name, Description = permission.Description, HasPermission = hasPermission });
-                }
-                //note - these queries require "using System.Dynamic.Linq" library
-                IQueryable<RolePermissionModel> query = rolePermissions.AsQueryable();
-                var data = Web.Infrastructure.Util.GetGridData<RolePermissionModel>(searchModel, query);
+                var data = GetRolePermissionsQuery(id, searchModel);
                 var dataList = data.Items.Select(x => new { x.Name, x.Description, x.HasPermission }).ToList();
                 filePath = Web.Infrastructure.ExporterManager.Export("rolepermissions", Web.Infrastructure.ExporterType.CSV, dataList, "");
             }
@@ -265,24 +236,9 @@ namespace Web.Controllers.Api
         [Route("api/roleuserlist")]
         public dynamic GetRoleUserList([FromUri] JqGridSearchModel searchModel)
         {
-            var query = _service.Query();
-            var gridData = Web.Infrastructure.Util.GetGridData<Role>(searchModel, query);
-            int totalRecords = gridData.TotalNumber;
-            var data = gridData.Items;
-
-            var dataListTemp = data.SelectMany(u => _userService.Query(), (r, u) => new { r, u })
-                .Where(x => x.u.Roles.Contains(x.r)).OrderBy(x => x.r.Id).Select(x => new { x.r.Id, x.r.Name, x.r.Description, x.u }).ToList();
-            var roles = data.ToList();
-            List<RoleUserModel> dataList = new List<RoleUserModel>();
-            foreach (Role role in roles)
-            {
-                RoleUserModel roleUser = new RoleUserModel { Id = role.Id, Description = role.Description, Name = role.Name };
-                var users = dataListTemp.Where(x => x.Id == role.Id).Select(x => x.u).ToList();
-                foreach (var user in users)
-                    roleUser.Users.Add(new RoleUserModel.User { Id = user.ID, UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName });
-                dataList.Add(roleUser);
-            }
-            var totalPages = (int)Math.Ceiling((float)totalRecords / searchModel.rows);
+            int totalRecords;
+            var dataList = GetRoleUserListQuery(searchModel, out totalRecords);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (searchModel.rows == 0 ? 1 : searchModel.rows));
             return new JqGridModel
             {
                 total = searchModel.page > 0 ? totalPages : 1,
@@ -299,24 +255,9 @@ namespace Web.Controllers.Api
             HttpResponseMessage result = null;
             try
             {
-                var query = _service.Query();
                 searchModel.rows = 0;
-                var gridData = Web.Infrastructure.Util.GetGridData<Role>(searchModel, query);
-                int totalRecords = gridData.TotalNumber;
-                var data = gridData.Items;
-
-                var dataListTemp = data.SelectMany(u => _userService.Query(), (r, u) => new { r, u })
-                    .Where(x => x.u.Roles.Contains(x.r)).OrderBy(x => x.r.Id).Select(x => new { x.r.Id, x.r.Name, x.r.Description, x.u }).ToList();
-                var roles = data.ToList();
-                List<RoleUserModel> dataList = new List<RoleUserModel>();
-                foreach (Role role in roles)
-                {
-                    RoleUserModel roleUser = new RoleUserModel { Id = role.Id, Description = role.Description, Name = role.Name };
-                    var users = dataListTemp.Where(x => x.Id == role.Id).Select(x => x.u).ToList();
-                    foreach (var user in users)
-                        roleUser.Users.Add(new RoleUserModel.User { Id = user.ID, UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName });
-                    dataList.Add(roleUser);
-                }
+                int totalRecords;
+                var dataList = GetRoleUserListQuery(searchModel, out totalRecords);
                 var dataList1 = dataList.Select(x => new { x.Description, Users = string.Join(", ", x.Users.Select(y => y.UserName)) }).ToList();
                 filePath = Web.Infrastructure.ExporterManager.Export("roleuserlist", Web.Infrastructure.ExporterType.CSV, dataList1, "");
             }
@@ -350,6 +291,54 @@ namespace Web.Controllers.Api
                 return BadRequest("User id cannot be empty.");
             _service.RemoveUsersFromRoles(new List<Guid> { uid }, new List<Guid> { rid });
             return Ok();
+        }
+        private Web.Infrastructure.GridModel<RolePermissionModel> GetRolePermissionsQuery(Guid id, [FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        {
+            if (id == default(Guid))
+                throw new ArgumentNullException("Role id cannot be empty.");
+            int startRow = (searchModel.page * searchModel.rows) + 1;
+            int skip = (searchModel.page > 0 ? searchModel.page - 1 : 0) * searchModel.rows;
+            Role role = _service.GetById(id);
+            List<Permission> allPermission = _permissionService.GetAllPermissions();
+            List<RolePermissionModel> rolePermissions = new List<RolePermissionModel>();
+            foreach (var permission in allPermission)
+            {
+                bool hasPermission = role.Permissions.AsQueryable().Any(x => x.Id == permission.Id);
+                rolePermissions.Add(new RolePermissionModel { Id = permission.Id, Name = permission.Name, Description = permission.Description, HasPermission = hasPermission });
+            }
+            //note - these queries require "using System.Dynamic.Linq" library
+            IQueryable<RolePermissionModel> query = rolePermissions.AsQueryable();
+            var data = Web.Infrastructure.Util.GetGridData<RolePermissionModel>(searchModel, query);
+            return data;
+        }
+        private List<RoleUserModel> GetRoleUserListQuery([FromUri] JqGridSearchModel searchModel, out int totalNumber, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        {
+            var query = _service.Query();
+            var gridData = Web.Infrastructure.Util.GetGridData<Role>(searchModel, query);
+            int totalRecords = gridData.TotalNumber;
+            var data = gridData.Items;
+
+            var dataListTemp = data.SelectMany(u => _userService.Query(), (r, u) => new { r, u })
+                .Where(x => x.u.Roles.Contains(x.r)).OrderBy(x => x.r.Id).Select(x => new { x.r.Id, x.r.Name, x.r.Description, x.u }).ToList();
+            var roles = data.ToList();
+            List<RoleUserModel> dataList = new List<RoleUserModel>();
+            foreach (Role role in roles)
+            {
+                RoleUserModel roleUser = new RoleUserModel { Id = role.Id, Description = role.Description, Name = role.Name };
+                var users = dataListTemp.Where(x => x.Id == role.Id).Select(x => x.u).ToList();
+                foreach (var user in users)
+                    roleUser.Users.Add(new RoleUserModel.User { Id = user.ID, UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName });
+                dataList.Add(roleUser);
+            }
+            totalNumber = totalRecords;
+            return dataList;
+        }
+        private Web.Infrastructure.GridModel<Role> GetRoleQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        {
+            var query = _service.Query();
+            //query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
+            var data = Web.Infrastructure.Util.GetGridData<Role>(searchModel, query);
+            return data;
         }
     }
 }

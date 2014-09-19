@@ -119,7 +119,7 @@ namespace Web.Infrastructure
         {
             DeleteLogs(NHibernateConfig.LogDomainFactory(), "AuthenticationAudits", "CreatedDate",olderThan);
         }
-        public static GridModel<T> GetGridData<T>([System.Web.Http.FromUri] App.Mvc.JqGrid.JqGridSearchModel searchModel, IQueryable<T> query,int maxRecords=100000)
+        public static GridModel<T> GetGridData<T>([System.Web.Http.FromUri] App.Mvc.JqGrid.JqGridSearchModel searchModel, IQueryable<T> query,int maxRecords=Constants.DEFAULT_MAX_RECORDS_RETURN)
         {
             int totalRecords;
             int startRow = (searchModel.page * searchModel.rows) + 1;
@@ -143,7 +143,7 @@ namespace Web.Infrastructure
             data = data.Skip(skip);
             if (totalRecords > 0)
                 data = data.Take(searchModel.rows == 0 ? totalRecords : searchModel.rows);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / searchModel.rows);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (searchModel.rows==0?1:searchModel.rows));
 
             return new GridModel<T>
             {

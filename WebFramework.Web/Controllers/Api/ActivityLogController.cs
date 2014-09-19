@@ -28,10 +28,7 @@ namespace Web.Controllers.Api
 
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var query = _service.Query();
-            if (Constants.SHOULD_FILTER_BY_APP)
-                query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
-            var data = Util.GetGridData<ActivityLog>(searchModel, query);
+            var data = GetQuery(searchModel);
             var dataList = data.Items.ToList();
             var grid = new JqGridModel
             {
@@ -50,11 +47,8 @@ namespace Web.Controllers.Api
             HttpResponseMessage result = null;
             try
             {
-                var query = _service.Query();
-                if (Constants.SHOULD_FILTER_BY_APP)
-                    query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
                 searchModel.rows = 0;
-                var data = Util.GetGridData<ActivityLog>(searchModel, query);
+                var data = GetQuery(searchModel);
                 var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.Activity, x.Detail, x.UserName, x.ClientIP }).ToList();
                 filePath = ExporterManager.Export("activitylog", ExporterType.CSV, dataList.ToList(), "");
             }
@@ -78,6 +72,14 @@ namespace Web.Controllers.Api
             }
 
             return result;
+        }
+        private GridModel<ActivityLog> GetQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        {
+            var query = _service.Query();
+            if (Constants.SHOULD_FILTER_BY_APP)
+                query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
+            var data = Util.GetGridData<ActivityLog>(searchModel, query);
+            return data;
         }
     }
 }

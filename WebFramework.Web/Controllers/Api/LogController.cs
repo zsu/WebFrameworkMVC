@@ -75,10 +75,7 @@ namespace Web.Controllers.Api
         }
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var query = _service.Query();
-            if (Constants.SHOULD_FILTER_BY_APP)
-                query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
-            var data = Util.GetGridData<Logs>(searchModel, query);
+            var data = GetQuery(searchModel);
             var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList();
             var grid = new JqGridModel
             {
@@ -98,11 +95,8 @@ namespace Web.Controllers.Api
             HttpResponseMessage result = null;
             try
             {
-                var query = _service.Query();
-                if (Constants.SHOULD_FILTER_BY_APP)
-                    query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
                 searchModel.rows = 0;
-                var data = Util.GetGridData<Logs>(searchModel, query);
+                var data = GetQuery(searchModel);
                 var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList();
                 filePath = ExporterManager.Export("Logs", ExporterType.CSV, dataList.ToList(), "");
             }
@@ -126,6 +120,14 @@ namespace Web.Controllers.Api
             }
 
             return result;
+        }
+        private GridModel<Logs> GetQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        {
+            var query = _service.Query();
+            if (Constants.SHOULD_FILTER_BY_APP)
+                query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
+            var data = Util.GetGridData<Logs>(searchModel, query);
+            return data;
         }
     }
 }
