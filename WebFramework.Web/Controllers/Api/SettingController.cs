@@ -26,7 +26,7 @@ namespace Web.Controllers.Api
         // GET api/setting
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = GetQuery(searchModel);
+            var data = GetQuery(_service.Query(),searchModel);
             var dataList = data.Items.Select(x => new { x.Id, x.Name, x.Value }).ToList();
             var grid = new JqGridModel
             {
@@ -46,7 +46,7 @@ namespace Web.Controllers.Api
             try
             {
                 searchModel.rows = 0;
-                var data = GetQuery(searchModel);
+                var data = GetQuery(Web.Infrastructure.Util.GetStatelessQuery<Setting>(),searchModel);
                 var dataList = data.Items.Select(x => new { x.Name, x.Value }).ToList();
                 filePath = Web.Infrastructure.ExporterManager.Export("setting", Web.Infrastructure.ExporterType.CSV, dataList.ToList(), "");
             }
@@ -139,9 +139,8 @@ namespace Web.Controllers.Api
             else
                 return NotFound();
         }
-        private Web.Infrastructure.GridModel<Setting> GetQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        private Web.Infrastructure.GridModel<Setting> GetQuery(IQueryable<Setting> query,[FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
         {
-            var query = _service.Query();
             if (Constants.SHOULD_FILTER_BY_APP)
                 query = query.Where(x => x.Name.StartsWith(string.Format("{0}.", App.Common.Util.ApplicationConfiguration.AppAcronym)));
             var data = Web.Infrastructure.Util.GetGridData<Setting>(searchModel, query);

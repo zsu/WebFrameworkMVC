@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using App.Common.Logging;
 using WebFramework.Data.Domain;
 using System.Text;
+using NHibernate.Linq;
 namespace Web.Infrastructure
 {
     public class Util
@@ -153,7 +154,11 @@ namespace Web.Infrastructure
                 Items=data
             };
         }
-        
+        public static IQueryable<T> GetStatelessQuery<T>()
+        {
+            var session = ((App.Infrastructure.NHibernate.NHUnitOfWork)App.Data.UnitOfWorkManager.CurrentUnitOfWork).GetStatelessSession<T>();
+            return session.Query<T>();
+        }        
         public static string GetClientTimeZone()
         {
             string timezoneId = null;

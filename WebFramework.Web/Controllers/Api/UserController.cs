@@ -35,7 +35,7 @@ namespace Web.Controllers.Api
         // GET api/role
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = GetQuery(searchModel);
+            var data = GetQuery(_userService.Query(),searchModel);
             var dataList = data.Items.Select(x => new
             {
                 x.ID,
@@ -121,7 +121,7 @@ namespace Web.Controllers.Api
             try
             {
                 searchModel.rows = 0;
-                var data = GetQuery(searchModel);
+                var data = GetQuery(Web.Infrastructure.Util.GetStatelessQuery<NhUserAccount>(),searchModel);
                 var dataList = data.Items.Select(x => new
                 {
                     Application = x.Tenant,
@@ -439,9 +439,8 @@ namespace Web.Controllers.Api
             }
             return allow;
         }
-        private Web.Infrastructure.GridModel<NhUserAccount> GetQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        private Web.Infrastructure.GridModel<NhUserAccount> GetQuery(IQueryable<NhUserAccount> query,[FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
         {
-            var query = _userService.Query();
             if (!User.IsInRole(Constants.ROLE_ADMIN))
             {
                 query = query.Where(x => !x.Roles.Any(y => y.Name == Constants.ROLE_ADMIN));

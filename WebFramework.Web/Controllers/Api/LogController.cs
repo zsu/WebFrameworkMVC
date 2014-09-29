@@ -75,7 +75,7 @@ namespace Web.Controllers.Api
         }
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
-            var data = GetQuery(searchModel);
+            var data = GetQuery(_service.Query(),searchModel);
             var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList();
             var grid = new JqGridModel
             {
@@ -96,7 +96,7 @@ namespace Web.Controllers.Api
             try
             {
                 searchModel.rows = 0;
-                var data = GetQuery(searchModel);
+                var data = GetQuery(Util.GetStatelessQuery<Logs>(),searchModel);
                 var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList();
                 filePath = ExporterManager.Export("Logs", ExporterType.CSV, dataList.ToList(), "");
             }
@@ -121,9 +121,8 @@ namespace Web.Controllers.Api
 
             return result;
         }
-        private GridModel<Logs> GetQuery([FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
+        private GridModel<Logs> GetQuery(IQueryable<Logs> query,[FromUri] JqGridSearchModel searchModel, int maxRecords = Constants.DEFAULT_MAX_RECORDS_RETURN)
         {
-            var query = _service.Query();
             if (Constants.SHOULD_FILTER_BY_APP)
                 query = query.Where(x => x.Application == App.Common.Util.ApplicationConfiguration.AppAcronym);
             var data = Util.GetGridData<Logs>(searchModel, query);
