@@ -31,12 +31,13 @@ namespace Web.Controllers.Api
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
             var data = GetQuery(_service.Query(),searchModel);
+            var dataList = data.Items.ToList();
             var grid = new JqGridModel
             {
                 total = data.TotalPage,
                 page = data.CurrentPage,
                 records = data.TotalNumber,
-                rows = data.Items.Select(x => new { id = x.Id, cell = new object[] { x.Id, x.Name, x.BccEmailAddresses, x.Subject, x.Body, x.IsActive } }).ToArray()
+                rows = dataList.Select(x => new { id = x.Id, cell = new object[] { x.Id, x.Name, x.BccEmailAddresses, x.Subject, x.Body, x.IsActive } }).ToArray()
             };
             return grid;
         }
