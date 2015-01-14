@@ -76,13 +76,13 @@ namespace Web.Controllers.Api
         public dynamic GetGridData([FromUri] JqGridSearchModel searchModel)
         {
             var data = GetQuery(_service.Query(),searchModel);
-            var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList();
+            var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.ClientIP,x.Host, x.SessionId }).ToList();
             var grid = new JqGridModel
             {
                 total = data.TotalPage,
                 page = data.CurrentPage,
                 records = data.TotalNumber,
-                rows = dataList.Select(x => new { id = x.Id, cell = new object[] { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId } }).ToArray()
+                rows = dataList.Select(x => new { id = x.Id, cell = new object[] { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.ClientIP,x.Host, x.SessionId } }).ToArray()
             };
 
             return grid;
@@ -97,7 +97,7 @@ namespace Web.Controllers.Api
             {
                 searchModel.rows = 0;
                 var data = GetQuery(Util.GetStatelessQuery<Logs>(),searchModel);
-                var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.Host, x.SessionId }).ToList();
+                var dataList = data.Items.Select(x => new { x.Id, x.Application, x.CreatedDate, x.LogLevel, x.UserName, x.Message, x.ClientIP,x.Host, x.SessionId }).ToList();
                 filePath = ExporterManager.Export("Logs", ExporterType.CSV, dataList.ToList(), "");
             }
             catch (Exception ex)
