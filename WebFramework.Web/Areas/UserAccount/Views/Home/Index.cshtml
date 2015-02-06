@@ -7,7 +7,7 @@
 @if (User.Identity.IsAuthenticated)
 {
     <h2>Signed In</h2>
-    using (Html.BeginForm())
+    @*using (Html.BeginForm())
     {
         <fieldset>
             <legend>Profile</legend>
@@ -21,7 +21,7 @@
             </p>
             <p><button class="btn btn-info">Save Changes</button></p>
         </fieldset>
-    }
+    }*@
 }
 else
 {
@@ -51,7 +51,7 @@ else
         <li>@Html.ActionLink("Register", "Index", "Register")</li>
         <li>@Html.ActionLink("Reset Password", "Index", "PasswordReset")</li>
     }
-    <li>@Html.ActionLink("Admin Account Lookup", "Index", "Home", new { area = "Admin" }, null)</li>
+    @*<li>@Html.ActionLink("Admin Account Lookup", "Index", "Home", new { area = "Admin" }, null)</li>*@
 </ul>
 
 <h3>Your Claims</h3>
