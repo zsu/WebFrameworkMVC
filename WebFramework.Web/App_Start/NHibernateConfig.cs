@@ -39,8 +39,8 @@ namespace Web
                             .DataBaseIntegration(d =>
                             {
                                 d.ConnectionStringName = Constants.SECURITY_DB;
-                                //d.Dialect<MsSql2012Dialect>();
-                                d.Dialect<Oracle10gDialect>();
+                                d.Dialect<MsSql2012Dialect>();
+                                //d.Dialect<Oracle10gDialect>();
                                 d.SchemaAction = SchemaAutoAction.Validate;
                             })
                             .Proxy(p => p.ProxyFactoryFactory<DefaultProxyFactoryFactory>())
@@ -74,8 +74,8 @@ namespace Web
                             .DataBaseIntegration(d =>
                                             {
                                                 d.ConnectionStringName = Constants.LOG_DB;
-                                                //d.Dialect<MsSql2012Dialect>();
-                                                 d.Dialect<Oracle10gDialect>();
+                                                d.Dialect<MsSql2012Dialect>();
+                                                 //d.Dialect<Oracle10gDialect>();
                                                 d.SchemaAction = SchemaAutoAction.Validate;
                                             })
                             .Proxy(p => p.ProxyFactoryFactory<DefaultProxyFactoryFactory>())
@@ -109,8 +109,8 @@ namespace Web
                             .DataBaseIntegration(d =>
                             {
                                 d.ConnectionStringName = Constants.APP_DB;
-                                //d.Dialect<MsSql2012Dialect>();
-                                d.Dialect<Oracle10gDialect>();
+                                d.Dialect<MsSql2012Dialect>();
+                                //d.Dialect<Oracle10gDialect>();
                                 d.SchemaAction = SchemaAutoAction.Validate;
                             })
                             .Proxy(p => p.ProxyFactoryFactory<DefaultProxyFactoryFactory>())

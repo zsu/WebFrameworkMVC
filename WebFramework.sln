@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Infrastructure.Castle",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Infrastructure.Log4net", "App.Infrastructure.Log4net\App.Infrastructure.Log4net.csproj", "{1F70D105-B8FD-4685-B836-3301A38C4AD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrockAllen.MembershipReboot", "BrockAllen.MembershipReboot\BrockAllen.MembershipReboot.csproj", "{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFramework.Service", "WebFramework.Service\WebFramework.Service.csproj", "{325619C8-0126-4EDD-9D6B-F66FD3428A22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Infrastructure.NHibernate", "App.Infrastructure.NHibernate\App.Infrastructure.NHibernate.csproj", "{C1B60E5C-3F01-42C0-9A97-D4E562550BAD}"
@@ -64,10 +62,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schema", "Schema", "{3DA00E
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{4D199C58-C1B4-43C7-A21F-EEAD1C624296}"
-	ProjectSection(SolutionItems) = preProject
-		lib\BrockAllen.MembershipReboot.WebHost.dll = lib\BrockAllen.MembershipReboot.WebHost.dll
-		lib\BrockAllen.OAuth2.dll = lib\BrockAllen.OAuth2.dll
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quartz.Jobs", "Quartz.Jobs\Quartz.Jobs.csproj", "{72CB33A5-4780-4578-992B-824B5482D683}"
 EndProject
@@ -147,22 +141,6 @@ Global
 		{1F70D105-B8FD-4685-B836-3301A38C4AD2}.NETFX 4.5 Release|Any CPU.Build.0 = Release|Any CPU
 		{1F70D105-B8FD-4685-B836-3301A38C4AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F70D105-B8FD-4685-B836-3301A38C4AD2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 3.5 Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 3.5 Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 3.5 Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 3.5 Release|Any CPU.Build.0 = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.0 Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.0 Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.0 Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.0 Release|Any CPU.Build.0 = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.5 Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.5 Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.5 Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.NETFX 4.5 Release|Any CPU.Build.0 = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A33FE01F-AE9B-4BDE-B521-AB13916B1CFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{325619C8-0126-4EDD-9D6B-F66FD3428A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{325619C8-0126-4EDD-9D6B-F66FD3428A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{325619C8-0126-4EDD-9D6B-F66FD3428A22}.NETFX 3.5 Debug|Any CPU.ActiveCfg = Debug|Any CPU

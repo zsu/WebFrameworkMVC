@@ -12,15 +12,15 @@ namespace Web.Areas.UserAccount.Controllers
     [Authorize]
     public class ChangeSecretQuestionController : Controller
     {
-        UserAccountService<NhUserAccount> userAccountService;
+        UserAccountService<NhUserAccount> _userAccountService;
         public ChangeSecretQuestionController(UserAccountService<NhUserAccount> userAccountService)
         {
-            this.userAccountService = userAccountService;
+            _userAccountService = userAccountService;
         }
         
         public ActionResult Index()
         {
-            var account = this.userAccountService.GetByID(User.GetUserID());
+            var account = _userAccountService.GetByID(User.GetUserID());
             var vm = new PasswordResetSecretsViewModel
             {
                 Secrets = account.PasswordResetSecrets.ToArray()
@@ -32,7 +32,7 @@ namespace Web.Areas.UserAccount.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Remove(Guid id)
         {
-            this.userAccountService.RemovePasswordResetSecret(User.GetUserID(), id);
+            _userAccountService.RemovePasswordResetSecret(User.GetUserID(), id);
             return RedirectToAction("Index");
         }
         
@@ -44,8 +44,16 @@ namespace Web.Areas.UserAccount.Controllers
             {
                 try
                 {
-                    this.userAccountService.AddPasswordResetSecret(User.GetUserID(), model.Password, model.Question, model.Answer);
-                    return RedirectToAction("Index");
+                    var account = _userAccountService.GetByID(User.GetUserID());
+                    if (_userAccountService.Authenticate(account.Username, model.Password))
+                    {
+                        _userAccountService.AddPasswordResetSecret(account.ID, model.Question, model.Answer);
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Password", "Wrong password");
+                    }
                 }
                 catch (ValidationException ex)
                 {

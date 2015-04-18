@@ -11,17 +11,18 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using BrockAllen.MembershipReboot.Nh.Service;
 
 namespace Service
 {
     public class UserService : IUserService
     {
         private App.Common.Data.IRepository<NhUserAccount,Guid> _userRepository;
-        private UserAccountService<NhUserAccount> _userAccountService;
+        private NhUserAccountService<NhUserAccount> _userAccountService;
         private IActivityLogService _activityLogService;
         private MembershipRebootConfiguration<NhUserAccount> _membershipConfiguration;
         private enum ActivityType { AddUser, DeleteUser, UpdateUser};
-        public UserService(App.Common.Data.IRepository<NhUserAccount, Guid> userRepository, UserAccountService<NhUserAccount> userAccountService,
+        public UserService(App.Common.Data.IRepository<NhUserAccount, Guid> userRepository, NhUserAccountService<NhUserAccount> userAccountService,
             MembershipRebootConfiguration<NhUserAccount> membershipConfiguration,IActivityLogService activityLogService)
         {
             _userRepository = userRepository;
