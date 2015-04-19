@@ -215,7 +215,7 @@ namespace Web
         {
             //BrockAllen.MembershipReboot.Nh.Repository.IRepository<BrockAllen.MembershipReboot.Nh.PasswordHistory> userRepository = IoC.GetService<BrockAllen.MembershipReboot.Nh.Repository.IRepository<BrockAllen.MembershipReboot.Nh.PasswordHistory>>();
 
-            var db = IoC.GetService<IRepository<WebFramework.Data.Domain.PasswordHistory, Guid>>();
+            var db = IoC.GetService<IRepository<PasswordHistory, Guid>>();
             var oldEntires =
                 db.Query.Where(x => x.User.ID == evt.Account.ID).OrderByDescending(x => x.DateChanged).ToArray();
             for (var i = 0; i < 3 && oldEntires.Length > i; i++)
@@ -253,12 +253,12 @@ namespace Web
 
         private static void AddPasswordHistoryEntry(T user, string password)
         {
-            var db = IoC.GetService<IRepository<WebFramework.Data.Domain.PasswordHistory, Guid>>();
+            var db = IoC.GetService<IRepository<PasswordHistory, Guid>>();
             using (var scope = new UnitOfWorkScope())
             {
                 //App.Common.Data.IRepository<WebFramework.Data.Domain.PasswordHistory,Guid> userRepository = IoC.GetService<App.Common.Data.IRepository<WebFramework.Data.Domain.PasswordHistory,Guid>>();
 
-                var pw = new WebFramework.Data.Domain.PasswordHistory
+                var pw = new PasswordHistory
                 {
                     User = user,
                     Username = user.Username,

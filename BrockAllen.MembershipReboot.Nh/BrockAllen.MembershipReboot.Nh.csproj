@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\PasswordHistory.cs" />
     <Compile Include="Service\NhUserAccountService.cs" />
     <Compile Include="Account\NhLinkedAccount.cs" />
     <Compile Include="Account\NhLinkedAccountClaim.cs" />

@@ -78,7 +78,7 @@ namespace Web.Areas.UserAccount.Controllers
             try
             {
                 bool closed;
-                this._userAccountService.CancelVerification(id, out closed);
+                _userService.CancelVerification(id, out closed);
                 if (closed)
                 {
                     return View("Closed");

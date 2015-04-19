@@ -5,6 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using App.Common.InversionOfControl;
+using App.Data;
 
 namespace BrockAllen.MembershipReboot.Nh.Service
 {
@@ -143,6 +145,65 @@ namespace BrockAllen.MembershipReboot.Nh.Service
             this.AddEvent(new AccountCreatedEvent<T> { Account = account, InitialPassword = password, VerificationKey = key });
             //Changed by: Zhicheng Su
             return key;
+        }
+        public override void CancelVerification(string key, out bool accountClosed)
+        {
+            Tracing.Information("[UserAccountService.CancelVerification] called: {0}", key);
+
+            accountClosed = false;
+
+            if (String.IsNullOrWhiteSpace(key))
+            {
+                Tracing.Error("[UserAccountService.CancelVerification] failed -- key null");
+                throw new ValidationException(GetValidationMessage(MembershipRebootConstants.ValidationMessages.InvalidKey));
+            }
+
+            var account = this.GetByVerificationKey(key);
+            if (account == null)
+            {
+                Tracing.Error("[UserAccountService.CancelVerification] failed -- account not found from key");
+                throw new ValidationException(GetValidationMessage(MembershipRebootConstants.ValidationMessages.InvalidKey));
+            }
+
+            if (account.VerificationPurpose == null)
+            {
+                Tracing.Error("[UserAccountService.CancelVerification] failed -- no purpose");
+                throw new ValidationException(GetValidationMessage(MembershipRebootConstants.ValidationMessages.InvalidKey));
+            }
+
+            var result = Configuration.Crypto.VerifyHash(key, account.VerificationKey);
+            if (!result)
+            {
+                Tracing.Error("[UserAccountService.CancelVerification] failed -- key verification failed");
+                throw new ValidationException(GetValidationMessage(MembershipRebootConstants.ValidationMessages.InvalidKey));
+            }
+
+            if (account.VerificationPurpose == VerificationKeyPurpose.ChangeEmail &&
+                account.IsNew())
+            {
+                Tracing.Verbose("[UserAccountService.CancelVerification] account is new (deleting account)");
+                App.Common.Data.IRepository<PasswordHistory, Guid> passwordRepository = IoC.GetService<App.Common.Data.IRepository<PasswordHistory, Guid>>();
+                List<PasswordHistory> passwordHistories = passwordRepository.Query.Where(x => x.User.ID == account.ID).ToList();
+                using (var scope = new UnitOfWorkScope())
+                {
+                    foreach (PasswordHistory item in passwordHistories)
+                    {
+                        passwordRepository.Delete(item);
+                    }
+                    scope.Commit();
+                }
+                // if last login is null then they've never logged in so we can delete the account
+                DeleteAccount(account);
+                accountClosed = true;
+            }
+            else
+            {
+                Tracing.Verbose("[UserAccountService.CancelVerification] account is not new (canceling clearing verification key)");
+                ClearVerificationKey(account);
+                UpdateInternal(account);
+            }
+
+            Tracing.Verbose("[UserAccountService.CancelVerification] succeeded");
         }
     }
     //Changed by:Zhicheng Su
