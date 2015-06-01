@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace Web.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
+        [Authorize]
         public ActionResult Index()
         {
             if (User.IsInRole(Constants.ROLE_ADMIN))
