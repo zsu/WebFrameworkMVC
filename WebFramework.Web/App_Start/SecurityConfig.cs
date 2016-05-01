@@ -6,7 +6,6 @@ using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Hierarchical;
 using BrockAllen.MembershipReboot.Nh;
 using BrockAllen.MembershipReboot.Relational;
-using BrockAllen.MembershipReboot.WebHost;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,12 +18,15 @@ using Service;
 using System.Text;
 using System.Linq.Expressions;
 using BrockAllen.MembershipReboot.Nh.Service;
+using BrockAllen.MembershipReboot.Owin;
+using Microsoft.Owin;
+using Owin;
 
 namespace Web
 {
     public class SecurityConfig
     {
-        public static MembershipRebootConfiguration<NhUserAccount> Config()
+        public static MembershipRebootConfiguration<NhUserAccount> Config(IAppBuilder app)
         {
             var settings = SecuritySettings.Instance;
             settings.MultiTenant = false;
@@ -36,12 +38,7 @@ namespace Web
             config.AddCommandHandler(new CustomClaimsMapper<NhUserAccount>());
 
             var delivery = new SmtpMessageDelivery();
-
-            var appinfo = new AspNetApplicationInformation(Util.ApplicationConfiguration.AppAcronym, Util.ApplicationConfiguration.SupportOrganization,
-                "UserAccount/Login",
-                "UserAccount/ChangeEmail/Confirm/",
-                "UserAccount/Register/Cancel/",
-                "UserAccount/PasswordReset/Confirm/");
+            var appinfo = IoC.GetService<ApplicationInformation>();
             var messageTemplateService = IoC.GetService<IMessageTemplateService>();
             var formatter = new CustomEmailMessageFormatter<NhUserAccount>(appinfo, messageTemplateService);
 
@@ -75,13 +72,9 @@ namespace Web
             body.AppendLine("Thanks!");
             body.AppendLine();
             body.AppendLine("{emailSignature}");
-            var appinfo = new AspNetApplicationInformation(Util.ApplicationConfiguration.AppAcronym, Util.ApplicationConfiguration.SupportOrganization,
-                "UserAccount/Login",
-                "UserAccount/ChangeEmail/Confirm/",
-                "UserAccount/Register/Cancel/",
-                "UserAccount/PasswordReset/Confirm/");
-            string msgBody=body.ToString(), msgSubject="[{applicationName}] Temporary Password";
-           
+            var appinfo = IoC.GetService<ApplicationInformation>();
+            string msgBody = body.ToString(), msgSubject = "[{applicationName}] Temporary Password";
+
             string templateName = CleanGenericName(evt.GetType());
             MessageTemplate template = messageTemplateServce.GetByName(templateName);
             if (template != null)
@@ -90,7 +83,7 @@ namespace Web
                 msgSubject = template.Subject;
             }
             var tokenizer = new EmailMessageFormatter<T>.Tokenizer();
-            IDictionary<string, string> parameters =new Dictionary<string, string>();
+            IDictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add("InitialPassword", evt.InitialPassword);
             parameters.Add("VerificationKey", evt.VerificationKey);
             msgBody = tokenizer.Tokenize(evt, appinfo, msgBody, parameters);

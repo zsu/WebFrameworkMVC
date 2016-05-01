@@ -48,3 +48,4 @@ packages
 *.user
 *.vspscc
 *.log
+.vs/config/applicationhost.config

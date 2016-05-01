@@ -109,10 +109,10 @@ namespace Web
 
                 return;
             } 
-            HttpApplication app = (HttpApplication)source;
-            HttpContext context = app.Context;
-            // Attempt to peform first request initialization
-            FirstRequestInitialization.Initialize(context);
+            //HttpApplication app = (HttpApplication)source;
+            //HttpContext context = app.Context;
+            //// Attempt to peform first request initialization
+            //FirstRequestInitialization.Initialize(context);
         }
         protected void Application_PostAuthenticateRequest()
         {
@@ -430,53 +430,53 @@ namespace Web
         }
         #endregion Private Methods
     }
-    class FirstRequestInitialization
-    {
-        private static bool _initialized = false;
-        private static Object _syncRoot = new Object();
-        // Initialize only on the first request
+    //class FirstRequestInitialization
+    //{
+    //    private static bool _initialized = false;
+    //    private static Object _syncRoot = new Object();
+    //    // Initialize only on the first request
 
-        public static void Initialize(HttpContext context)
-        {
-            if (_initialized)
-            {
-                return;
-            }
-            lock (_syncRoot)
-            {
-                if (_initialized)
-                {
-                    return;
-                }
-                // Perform first-request initialization here ...
-                SeedDatabase();
-                _initialized = true;
-            }
-        }
-        private static void SeedDatabase()
-        {
-            string userEmail = ConfigurationManager.AppSettings[Constants.ADMIN_EMAIL];
-            if (!string.IsNullOrWhiteSpace(userEmail))
-            {
-                IUserService userService = IoC.GetService<IUserService>();
-                //string username = userEmail.Substring(0, userEmail.IndexOf('@') > 0 ? userEmail.IndexOf('@') : userEmail.Length);
-                string username = userEmail;
-                var account = userService.FindBy(x => x.Username == username || x.Email == userEmail);
-                if (account == null)
-                {
-                    NhUserAccount user = new NhUserAccount() { Username = username, Email = userEmail, HashedPassword = "Abc123$", FirstName = "Admin",IsLoginAllowed=true,IsAccountVerified=true};
-                    account = userService.CreateAccountWithTempPassword(user);
-                }
+    //    public static void Initialize(HttpContext context)
+    //    {
+    //        if (_initialized)
+    //        {
+    //            return;
+    //        }
+    //        lock (_syncRoot)
+    //        {
+    //            if (_initialized)
+    //            {
+    //                return;
+    //            }
+    //            // Perform first-request initialization here ...
+    //            SeedDatabase();
+    //            _initialized = true;
+    //        }
+    //    }
+    //    private static void SeedDatabase()
+    //    {
+    //        string userEmail = ConfigurationManager.AppSettings[Constants.ADMIN_EMAIL];
+    //        if (!string.IsNullOrWhiteSpace(userEmail))
+    //        {
+    //            IUserService userService = IoC.GetService<IUserService>();
+    //            //string username = userEmail.Substring(0, userEmail.IndexOf('@') > 0 ? userEmail.IndexOf('@') : userEmail.Length);
+    //            string username = userEmail;
+    //            var account = userService.FindBy(x => x.Username == username || x.Email == userEmail);
+    //            if (account == null)
+    //            {
+    //                NhUserAccount user = new NhUserAccount() { Username = username, Email = userEmail, HashedPassword = "Abc123$", FirstName = "Admin",IsLoginAllowed=true,IsAccountVerified=true};
+    //                account = userService.CreateAccountWithTempPassword(user);
+    //            }
 
-                IRoleService roleServie = IoC.GetService<IRoleService>();
-                Role adminRole = new Role { Name = Constants.ROLE_ADMIN, Description = "System Administrator" };
-                if (!roleServie.RoleExists(adminRole.Name))
-                {
-                    roleServie.CreateRole(adminRole);
-                }
-                if (!roleServie.IsUserInRole(account.ID, Constants.ROLE_ADMIN))
-                    roleServie.AddUsersToRoles(new List<Guid>() { account.ID }, new List<string>() { adminRole.Name });
-            }
-        }
-    }
+    //            IRoleService roleServie = IoC.GetService<IRoleService>();
+    //            Role adminRole = new Role { Name = Constants.ROLE_ADMIN, Description = "System Administrator" };
+    //            if (!roleServie.RoleExists(adminRole.Name))
+    //            {
+    //                roleServie.CreateRole(adminRole);
+    //            }
+    //            if (!roleServie.IsUserInRole(account.ID, Constants.ROLE_ADMIN))
+    //                roleServie.AddUsersToRoles(new List<Guid>() { account.ID }, new List<string>() { adminRole.Name });
+    //        }
+    //    }
+    //}
 }
