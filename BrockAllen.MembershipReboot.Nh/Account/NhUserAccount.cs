@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Iesi.Collections.Generic;
+    //using Iesi.Collections.Generic;
 
     public class NhUserAccount: UserAccount
     {
@@ -81,14 +81,14 @@
         //public virtual IList<PasswordHistory> PasswordHistories { get; set; }
         public NhUserAccount()
         {
-            this.ClaimsCollection = new HashedSet<NhUserClaim>();
-            this.LinkedAccountsCollection = new HashedSet<NhLinkedAccount>();
-            this.LinkedAccountClaimsCollection = new HashedSet<NhLinkedAccountClaim>();
-            this.CertificatesCollection = new HashedSet<NhUserCertificate>();
-            this.TwoFactorAuthTokensCollection = new HashedSet<NhTwoFactorAuthToken>();
-            this.PasswordResetSecretsCollection = new HashedSet<NhPasswordResetSecret>();
+            this.ClaimsCollection = new HashSet<NhUserClaim>();
+            this.LinkedAccountsCollection = new HashSet<NhLinkedAccount>();
+            this.LinkedAccountClaimsCollection = new HashSet<NhLinkedAccountClaim>();
+            this.CertificatesCollection = new HashSet<NhUserCertificate>();
+            this.TwoFactorAuthTokensCollection = new HashSet<NhTwoFactorAuthToken>();
+            this.PasswordResetSecretsCollection = new HashSet<NhPasswordResetSecret>();
             //Changed by: Zhicheng Su
-            this.Roles = new HashedSet<Role>();
+            this.Roles = new HashSet<Role>();
             //this.PasswordHistories = new List<PasswordHistory>();
         }
 

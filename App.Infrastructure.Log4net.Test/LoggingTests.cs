@@ -65,7 +65,7 @@ namespace App.Infrastructure.Log4net.Test
         public void Debug_Should_Log_Message()
         {
             string folder = Path.GetFullPath("Logs");
-            string filePattern = string.Format("log-{0}.log", Thread.CurrentThread.ManagedThreadId);
+            string filePattern = string.Format("Test.log", Thread.CurrentThread.ManagedThreadId);
             VerifyLogFile(null, LogLevel.Debug, filePattern, true);
         }
         
