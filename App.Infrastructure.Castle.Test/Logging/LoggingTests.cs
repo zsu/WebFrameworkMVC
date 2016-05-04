@@ -18,7 +18,7 @@ namespace App.Infrastructure.Castle.Logging.Test
     [TestClass]
     public class LoggingTests
     {
-        private string logFilePath = @"Logs/LogAttribute.log"; //string.Format(@"Logs/Log-{0}.log", Thread.CurrentThread.ManagedThreadId);
+        private string logFilePath = @"Logs/Test.log"; //string.Format(@"Logs/Log-{0}.log", Thread.CurrentThread.ManagedThreadId);
          private TestContext testContextInstance;
 
         /// <summary>
