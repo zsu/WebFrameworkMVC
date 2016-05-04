@@ -57,6 +57,9 @@ namespace App.Infrastructure.Log4net.Test
         public void MyTestCleanup()
         {
             log4net.LogManager.Shutdown();
+            if (Directory.Exists(_baseFilePath))
+                Directory.Delete(_baseFilePath,true);
+
             //DeleteFiles(_baseFilePath);
         }
         //
