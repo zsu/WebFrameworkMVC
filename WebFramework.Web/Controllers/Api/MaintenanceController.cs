@@ -20,21 +20,21 @@ namespace Web.Controllers.Api
         {
         }
         [Route("api/maintenance/activitylog")]
-        public async Task<IHttpActionResult> DeleteActivityLog()
+        public IHttpActionResult DeleteActivityLog()
         {
             DeleteActivityLogsTask task = new DeleteActivityLogsTask();
             task.Execute();
             return Ok();
         }
         [Route("api/maintenance/authenticationaudit")]
-        public async Task<IHttpActionResult> DeleteAuthenticationAudit()
+        public IHttpActionResult DeleteAuthenticationAudit()
         {
             DeleteAuthenticationAuditsTask task = new DeleteAuthenticationAuditsTask();
             task.Execute();
             return Ok();
         }
         [Route("api/maintenance/log")]
-        public async Task<IHttpActionResult> DeleteLog()
+        public IHttpActionResult DeleteLog()
         {
             DeleteLogsTask task = new DeleteLogsTask();
             task.Execute();

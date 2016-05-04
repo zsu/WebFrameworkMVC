@@ -24,7 +24,7 @@ namespace Web.Controllers.Api
         }
         [HttpPost]
         [Route("api/authenticate")]
-        public async Task<IHttpActionResult> Authenticate([FromBody]AuthenticationModel authenticationModel)
+        public IHttpActionResult Authenticate([FromBody]AuthenticationModel authenticationModel)
         {
             if (authenticationModel == null || string.IsNullOrEmpty(authenticationModel.UserName) || string.IsNullOrEmpty(authenticationModel.Password))
                 return Unauthorized();
