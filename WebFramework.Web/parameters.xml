@@ -7,17 +7,16 @@
     <parameterentry kind="XmlFile" scope="\\web.config$" match="/configuration/system.net/mailSettings/smtp/network/@password">
     </parameterentry>
   </parameter>
-    <parameter name="HostEnvironemnt" description="Host environment" defaultvalue="__RELEASE_ENVIRONMENTNAME__" tags="">
+  <parameter name="HostEnvironemnt" description="Host environment" defaultvalue="__RELEASE_ENVIRONMENTNAME__" tags="">
     <parameterentry kind="XmlFile" scope="\\web.config$" match="/configuration/appSettings/add[@key='HostEnvironemnt']/@value">
     </parameterentry>
   </parameter>
-   <parameter name="SourceBranch" description="Please enter source branch" defaultvalue="__SourceBranch__" tags="">
+  <parameter name="SourceBranch" description="Please enter source branch" defaultvalue="__SourceBranch__" tags="">
     <parameterentry kind="XmlFile" scope="\\web.config$" match="/configuration/appSettings/add[@key='SourceBranch']/@value">
     </parameterentry>
   </parameter>
-    <parameter name="SourceVersion" description="Please enter source version" defaultvalue="__SourceVersion__" tags="">
+  <parameter name="SourceVersion" description="Please enter source version" defaultvalue="__SourceVersion__" tags="">
     <parameterentry kind="XmlFile" scope="\\web.config$" match="/configuration/appSettings/add[@key='SourceVersion']/@value">
     </parameterentry>
-  </parameter>
   </parameter>
 </parameters>
