@@ -35,8 +35,8 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - @Util.ApplicationConfiguration.Copyright Build Version: @ViewContext.Controller.GetType().Assembly.GetName().Version @File.GetLastWriteTimeUtc(ViewContext.Controller.GetType().Assembly.Location).ToClientTime()
-            <span class="pull-right">@RenderSection("footerright", required: false)</span></p>
+            &copy; @DateTime.Now.Year - @Util.ApplicationConfiguration.Copyright
+            <span class="pull-right"><span class="buildinfo">@System.Configuration.ConfigurationManager.AppSettings["SourceBranch"] @System.Configuration.ConfigurationManager.AppSettings["SourceVersion"] @System.Configuration.ConfigurationManager.AppSettings["Environment"] @File.GetLastWriteTimeUtc(ViewContext.Controller.GetType().Assembly.Location).ToClientTime("yyyy-MM-dd")</span> |@RenderSection("footerright", required: false)</span>
         </footer>
     </div>
     @Scripts.Render("~/bundles/jquery")
