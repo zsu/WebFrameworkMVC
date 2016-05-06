@@ -11,11 +11,11 @@
     <parameterentry kind="XmlFile" scope="\\web.config$" match="/configuration/appSettings/add[@key='HostEnvironemnt']/@value">
     </parameterentry>
   </parameter>
-  <parameter name="SourceBranch" description="Please enter source branch" defaultvalue="__SourceBranch__" tags="">
+  <parameter name="SourceBranch" description="Source branch" defaultvalue="__BUILD_SOURCEBRNACHNAME__" tags="">
     <parameterentry kind="XmlFile" scope="\\web.config$" match="/configuration/appSettings/add[@key='SourceBranch']/@value">
     </parameterentry>
   </parameter>
-  <parameter name="SourceVersion" description="Please enter source version" defaultvalue="__SourceVersion__" tags="">
+  <parameter name="SourceVersion" description="Source version" defaultvalue="__BUILD_SOURCEVERSION__" tags="">
     <parameterentry kind="XmlFile" scope="\\web.config$" match="/configuration/appSettings/add[@key='SourceVersion']/@value">
     </parameterentry>
   </parameter>
