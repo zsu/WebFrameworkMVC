@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Linq;
 using System;
-using BrockAllen.MembershipReboot.Hierarchical;
 using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Nh;
 

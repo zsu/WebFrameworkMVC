@@ -3,23 +3,17 @@ using App.Common.Data;
 using App.Common.InversionOfControl;
 using App.Data;
 using BrockAllen.MembershipReboot;
-using BrockAllen.MembershipReboot.Hierarchical;
 using BrockAllen.MembershipReboot.Nh;
-using BrockAllen.MembershipReboot.Relational;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Claims;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using WebFramework.Data.Domain;
 using Service;
 using System.Text;
-using System.Linq.Expressions;
 using BrockAllen.MembershipReboot.Nh.Service;
-using BrockAllen.MembershipReboot.Owin;
-using Microsoft.Owin;
 using Owin;
 
 namespace Web

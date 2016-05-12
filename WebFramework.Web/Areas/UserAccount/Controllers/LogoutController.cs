@@ -1,7 +1,6 @@
 ﻿using WebFramework.Data.Domain;
 using App.Common;
 using BrockAllen.MembershipReboot;
-using BrockAllen.MembershipReboot.Hierarchical;
 using BrockAllen.MembershipReboot.Nh;
 using Service;
 using System;

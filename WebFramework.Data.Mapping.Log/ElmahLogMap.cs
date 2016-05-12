@@ -1,13 +1,3 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NHibernate.Mapping.ByCode.Conformist;
-using NHibernate.Mapping.ByCode;
-using NHibernate.Type;
-using WebFramework.Data.Mappings.Log;
-using WebFramework.Data.Domain;
-
 namespace WebFramework.Data.Mappings.Log
 {
     //public class ElmahLogMap : ClassMapping<ElmahLog>

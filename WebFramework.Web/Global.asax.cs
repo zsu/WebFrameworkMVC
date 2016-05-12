@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Helpers;
@@ -8,26 +6,16 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using BrockAllen.MembershipReboot;
-using BrockAllen.MembershipReboot.Hierarchical;
-using System.Configuration;
 using App.Common.InversionOfControl;
 using System.IO;
 using Castle.Windsor;
-using App.Common.Tasks;
 using App.Common.Logging;
 using System.Reflection;
 using System.Text;
 using App.Common;
 using Web.Controllers.Controllers;
-using System.Threading;
-using Service;
-using App.Common.Configuration;
-using App.Infrastructure.NHibernate;
-using BrockAllen.MembershipReboot.Nh;
 using App.Infrastructure.Castle.Mvc;
 using Elmah.Contrib.WebApi;
-using System.Text.RegularExpressions;
 
 
 namespace Web

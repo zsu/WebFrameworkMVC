@@ -1,5 +1,4 @@
-﻿using BrockAllen.MembershipReboot.Hierarchical;
-using Web.Areas.UserAccount.Models;
+﻿using Web.Areas.UserAccount.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using BrockAllen.MembershipReboot;

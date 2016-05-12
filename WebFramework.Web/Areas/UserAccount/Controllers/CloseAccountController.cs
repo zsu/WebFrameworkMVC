@@ -1,5 +1,4 @@
 ﻿using BrockAllen.MembershipReboot;
-using BrockAllen.MembershipReboot.Hierarchical;
 using BrockAllen.MembershipReboot.Nh;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;

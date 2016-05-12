@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Threading;
 using Common.Logging;
 using System.Net.Http;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using SLib.Cryptography;
 namespace Quartz.Jobs
 {
