@@ -11,11 +11,11 @@ namespace Web
                         "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                        "~/Scripts/jquery.validate.min.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
             "~/Scripts/jquery-ui-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqgrid").Include(
-                "~/Scripts/jquery.jqGrid.src.js",
+                "~/Scripts/jquery.jqGrid.min.js",
                 "~/Scripts/i18n/grid.locale-en.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
