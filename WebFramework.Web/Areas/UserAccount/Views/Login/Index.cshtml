@@ -2,14 +2,12 @@
 @{
     ViewBag.Title = "Log in";
 }
-<h2>@ViewBag.Title</h2>
 <div class="center col-md-12 well">
     @using (Html.BeginForm("Index", "Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         <fieldset>
             @Html.AntiForgeryToken()
-            <h4>Use a local account to log in</h4>
-            <hr />
+            <legend>User login</legend>
             @Html.ValidationSummary(true)
             <div class="form-group">
                 @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
