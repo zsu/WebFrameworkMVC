@@ -16,33 +16,34 @@
     @Scripts.Render("~/bundles/log4javascript")
 </head>
 <body>
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class="inner">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <div class="" style="padding:0px 15px">
-                        <span class="brand">
-                            <img id="logoPrint" src="~/Content/Images/logo.jpg" alt="WebFramework" border="0" height="90" width="230">
-                            <label>@Util.ApplicationConfiguration.AppFullName</label>
-                        </span>
+    <div class="wrapper">
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="inner">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <div class="" style="padding:0px 15px">
+                            <span class="brand">
+                                <img id="logoPrint" src="~/Content/Images/logo.jpg" alt="WebFramework" border="0" height="60" width="120">
+                                <label>@Util.ApplicationConfiguration.AppFullName</label>
+                            </span>
+                        </div>
                     </div>
+                    @RenderSection("menu", required: false)
                 </div>
-                @RenderSection("menu", required: false)
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        <div id="messagewrapper" style="display: none">
-            @Html.RenderMessages()
+        <div class="container body-content content">
+            <div id="messagewrapper" style="display: none">
+                @Html.RenderMessages()
+            </div>
+            @RenderBody()
         </div>
-        @RenderBody()
-        <hr />
-        <footer class="footer">
+        <footer class="footer content">
             &copy; @DateTime.Now.Year - @Util.ApplicationConfiguration.Copyright
             <span class="pull-right"><span class="buildinfo">@System.Configuration.ConfigurationManager.AppSettings["SourceBranch"] @System.Configuration.ConfigurationManager.AppSettings["SourceVersion"] @System.Configuration.ConfigurationManager.AppSettings["Environment"] @File.GetLastWriteTimeUtc(ViewContext.Controller.GetType().Assembly.Location).ToClientTime("yyyy-MM-dd")</span> |@RenderSection("footerright", required: false)</span>
         </footer>

@@ -1,18 +1,26 @@
 ﻿body {
-    padding-top: 90px;
-    padding-bottom: 20px;
+    font-family: Arial, sans-serif;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    position: absolute;
     height: 100%;
-    overflow: scroll;
+    min-width: 100%;
+    font-size: 13px;
     background-color: #F0F0F0;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top:30px;
+    padding-top: 100px;
+    padding-bottom: 100px;
 }
 
+.wrapper {
+    position: relative;
+    min-height: 100%;
+}
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
@@ -47,159 +55,160 @@ input[type="checkbox"].input-validation-error {
 
 /* Styles for notification
 -----------------------------------------------------------*/
-#messagewrapper
-{
-	position: fixed;
-	top: 0px;
-	right: 10px;
-	z-index: 10000;
-	margin: 5px auto;
-	width: 500px;
+#messagewrapper {
+    position: fixed;
+    top: 0px;
+    right: 10px;
+    z-index: 10000;
+    margin: 5px auto;
+    width: 500px;
 }
 
-#messagewrapper .messagebox
-{
-	/*padding: 12px 10px 10px 30px;*/
-	box-shadow: 5px 5px 10px #000;
+    #messagewrapper .messagebox {
+        /*padding: 12px 10px 10px 30px;*/
+        box-shadow: 5px 5px 10px #000;
+    }
+
+    #messagewrapper .success {
+        color: #060;
+        background: #cfc url(Images/ok.gif) no-repeat 8px 12px !important;
+    }
+
+    #messagewrapper .info {
+        color: #06f;
+        background: #0df url(Images/info.gif) no-repeat 8px 12px !important;
+    }
+
+    #messagewrapper .warning {
+        color: #c60;
+        background: #ffc url(Images/warn.gif) no-repeat 8px 12px !important;
+    }
+
+    #messagewrapper .error {
+        color: #c00;
+        background: #fcc url(Images/fail.gif) no-repeat 8px 12px !important;
+    }
+
+.messagebox.success {
+    background: #cfc url(Images/ok.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
 }
 
-#messagewrapper .success
-{
-	color: #060;
-	background: #cfc url(Images/ok.gif) no-repeat 8px 12px !important;
+.messagebox.info {
+    background: #0df url(Images/info.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
+    font-size: 0.85em;
+    font-weight: bold;
 }
 
-#messagewrapper .info
-{
-	color: #06f;
-	background: #0df url(Images/info.gif) no-repeat 8px 12px !important;
+.messagebox.warning {
+    background: #ffc url(Images/warn.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
 }
 
-#messagewrapper .warning
-{
-	color: #c60;
-	background: #ffc url(Images/warn.gif) no-repeat 8px 12px !important;
+.messagebox.error {
+    background: #fcc url(Images/fail.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
 }
 
-#messagewrapper .error
-{
-	color: #c00;
-	background: #fcc url(Images/fail.gif) no-repeat 8px 12px !important;
+.ui-dialog-content .messagebox.success {
+    background: url(Images/ok.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
 }
 
-.messagebox.success
-{
-	background: #cfc url(Images/ok.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
+.ui-dialog-content .messagebox.info {
+    background: url(Images/info.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
+    font-size: 0.85em;
+    font-weight: bold;
 }
 
-.messagebox.info
-{
-	background: #0df url(Images/info.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
-	font-size:0.85em;
-	font-weight:bold;
+.ui-dialog-content .messagebox.warning {
+    background: url(Images/warn.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
 }
 
-.messagebox.warning
-{
-	background: #ffc url(Images/warn.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
+.ui-dialog-content .messagebox.error {
+    background: url(Images/fail.gif) no-repeat 8px 12px !important;
+    text-align: left;
+    padding: 12px 10px 10px 30px !important;
 }
 
-.messagebox.error
-{
-	background: #fcc url(Images/fail.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
-}
-.ui-dialog-content .messagebox.success
-{
-	background: url(Images/ok.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
-}
-.ui-dialog-content .messagebox.info
-{
-	background: url(Images/info.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
-	font-size:0.85em;
-	font-weight:bold;
-}
-
-.ui-dialog-content .messagebox.warning
-{
-	background: url(Images/warn.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
-}
-
-.ui-dialog-content .messagebox.error
-{
-	background: url(Images/fail.gif) no-repeat 8px 12px !important;
-	text-align:left;
-	padding:12px 10px 10px 30px !important;
-}
 .inner {
-  min-height: 40px;
-  background-color: #fafafa;
-  background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
-  background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);
-  background-image: -o-linear-gradient(top, #ffffff, #f2f2f2);
-  background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
-  border: 1px solid #d4d4d4;
-  /*-webkit-border-radius: 4px;*/
-  /*-moz-border-radius: 4px;*/
-  /*border-radius: 4px;*/
-  /*-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);*/
-  /*-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);*/
-  /*box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);*/
-  *zoom: 1;
-
-
-  border-width: 0 0 1px;
-
-
-  padding-left: 0;
-  padding-right: 0;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-
-
-  -webkit-box-shadow: 0 1px 10px rgba(0,0,0,.1);
-  -moz-box-shadow: 0 1px 10px rgba(0,0,0,.1);
-  box-shadow: 0 1px 10px rgba(0,0,0,.1);
+    min-height: 40px;
+    background-color: #fafafa;
+    background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
+    background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);
+    background-image: -o-linear-gradient(top, #ffffff, #f2f2f2);
+    background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
+    border: 1px solid #d4d4d4;
+    /*-webkit-border-radius: 4px;*/
+    /*-moz-border-radius: 4px;*/
+    /*border-radius: 4px;*/
+    /*-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);*/
+    /*-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);*/
+    /*box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);*/
+    *zoom: 1;
+    border-width: 0 0 1px;
+    padding-left: 0;
+    padding-right: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: 0 1px 10px rgba(0,0,0,.1);
+    -moz-box-shadow: 0 1px 10px rgba(0,0,0,.1);
+    box-shadow: 0 1px 10px rgba(0,0,0,.1);
 }
-.inner:before,
-.inner:after {
-  display: table;
-  content: "";
-  line-height: 0;
+
+    .inner:before,
+    .inner:after {
+        display: table;
+        content: "";
+        line-height: 0;
+    }
+
+    .inner:after {
+        clear: both;
+    }
+
+.brand {
+    font-size: 20px;
+    color: #777;
 }
-.inner:after {
-    clear: both;
-}
-.brand{
-    font-size:20px;
-    color:#777;
-}
-.buildinfo{
+
+.buildinfo {
     opacity: 0.4;
     color: darkslategray;
 }
-.footer{
-    clear:both;
+
+.footer {
+    position: absolute;
+    padding: 0 15px 0 15px;
+    bottom: 0;
+    height: 35px;
+    width: 100%;
+    border-top: 1px solid #e5e5e5;
+    overflow: hidden;
+    z-index: 2;
 }
-.center{
+
+.center {
     float: none;
     margin-left: auto;
     margin-right: auto;
+}
+
+.content {
+    padding-left: 15px;
+    padding-right: 15px;
 }
