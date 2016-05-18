@@ -15,7 +15,7 @@ namespace Web
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
             "~/Scripts/jquery-ui-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqgrid").Include(
-                "~/Scripts/jquery.jqGrid.min.js",
+                "~/Scripts/jquery.jqGrid.js",
                 "~/Scripts/i18n/grid.locale-en.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
@@ -37,6 +37,7 @@ namespace Web
             "~/Scripts/Common.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-theme.css",
                       "~/Content/font-awesome.css",
                       "~/Content/site.css"));
             //bundles.Add(new StyleBundle("~/Content/jquery").Include(

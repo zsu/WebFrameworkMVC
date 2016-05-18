@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_BlankLayout.cshtml";
 }
 @section menu {
-    @Html.ActionLink((string)Util.ApplicationConfiguration.AppFullName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    @*@Html.ActionLink((string)Util.ApplicationConfiguration.AppFullName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
     <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
             @if (User.IsInAnyRole(new List<string> { Web.Constants.ROLE_ADMIN, Web.Constants.PERMISSION_EDIT_ROLE }))

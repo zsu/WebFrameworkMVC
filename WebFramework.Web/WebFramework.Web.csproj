@@ -544,6 +544,7 @@
     <Content Include="Scripts\jstz.js" />
     <Content Include="Scripts\jstz.min.js" />
     <Content Include="Scripts\log4javascript.js" />
+    <Content Include="Scripts\log4javascript.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

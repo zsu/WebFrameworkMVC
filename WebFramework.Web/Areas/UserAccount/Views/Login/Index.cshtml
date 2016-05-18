@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Log in";
 }
-<div class="center col-md-12 well">
+<div class="center col-md-7 well">
     @using (Html.BeginForm("Index", "Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         <fieldset>
@@ -26,21 +26,21 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-2">
                     <div class="checkbox">
-                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.CheckBoxFor(m => m.RememberMe, new { @style = "margin-left:0" })
                         @Html.LabelFor(m => m.RememberMe)
                     </div>
                 </div>
-                <div class="col-md-3 checkbox">
+                <div class="col-md-offset-1 col-md-3 checkbox">
                     @Html.ActionLink("Forgot Password?", "Index", "PasswordReset")
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-9">
+                <div class="col-md-offset-4 col-md-2">
                     <input type="submit" value="Log in" class="btn btn-info" />
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-9">
+                <div class="col-md-offset-2 col-md-6">
                     @Html.ActionLink("Register", "Index", "Register") if you don't have a local account.
                 </div>
             </div>

@@ -26,9 +26,10 @@
                         <span class="icon-bar"></span>
                     </button>
                     <div class="" style="padding:0px 15px">
-                        <a href="#" title="WebFramework" class="brand">
+                        <span class="brand">
                             <img id="logoPrint" src="~/Content/Images/logo.jpg" alt="WebFramework" border="0" height="90" width="230">
-                        </a>
+                            <label>@Util.ApplicationConfiguration.AppFullName</label>
+                        </span>
                     </div>
                 </div>
                 @RenderSection("menu", required: false)
@@ -41,7 +42,7 @@
         </div>
         @RenderBody()
         <hr />
-        <footer>
+        <footer class="footer">
             &copy; @DateTime.Now.Year - @Util.ApplicationConfiguration.Copyright
             <span class="pull-right"><span class="buildinfo">@System.Configuration.ConfigurationManager.AppSettings["SourceBranch"] @System.Configuration.ConfigurationManager.AppSettings["SourceVersion"] @System.Configuration.ConfigurationManager.AppSettings["Environment"] @File.GetLastWriteTimeUtc(ViewContext.Controller.GetType().Assembly.Location).ToClientTime("yyyy-MM-dd")</span> |@RenderSection("footerright", required: false)</span>
         </footer>
