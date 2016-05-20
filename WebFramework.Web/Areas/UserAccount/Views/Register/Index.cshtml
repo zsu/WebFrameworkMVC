@@ -3,16 +3,16 @@
     ViewBag.Title = "Register";
 }
 
-<h2>@ViewBag.Title</h2>
+@*<h2>@ViewBag.Title</h2>*@
 
 @using (Html.BeginForm("Index", "Register", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account</h4>
-    <hr />
+    @*<h4>Create a new account</h4>
+    <hr />*@
     <div class='form-horizontal well'>
         <fieldset>
-            <legend>Sign up</legend>
+            <legend>Create new account</legend>
             @Html.ValidationSummary()
             <div class="form-group">
                 @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
@@ -59,7 +59,7 @@
     </div>
 }
 
-    @using (Html.BeginForm("Confirm", "ChangeEmail", FormMethod.Get))
+    @*@using (Html.BeginForm("Confirm", "ChangeEmail", FormMethod.Get))
     {
         <div class='form-horizontal well'>
             <fieldset>
@@ -96,7 +96,7 @@
                 </div>
             </fieldset>
         </div>
-    }
+    }*@
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
     }
