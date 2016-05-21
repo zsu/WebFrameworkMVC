@@ -8,7 +8,7 @@
     @Html.ValidationSummary("Please correct the following errors")
     @Html.AntiForgeryToken()
 
-    <fieldset class="editor small">
+    <fieldset class="editor">
         <legend>@ViewBag.Title</legend>
 
         @Html.EditorForModel()
@@ -20,7 +20,7 @@
     </fieldset>
 }
 
-@using (Html.BeginForm("Confirm", "PasswordReset", FormMethod.Get))
+@*@using (Html.BeginForm("Confirm", "PasswordReset", FormMethod.Get))
 {
     <fieldset>
         <legend>Confirm</legend>
@@ -30,4 +30,4 @@
         </p>
         <p class="buttons"><button class="btn btn-info">Submit</button></p>
     </fieldset>
-}
+}*@

@@ -2,21 +2,37 @@
 @{
     ViewBag.Title = "Change Password";
 }
-
-<h2>@ViewBag.Title</h2>
-
 @using (Html.BeginForm())
 {
-    @Html.ValidationSummary("Error")
     @Html.AntiForgeryToken()
 
-    <fieldset>
-        <legend>@ViewBag.Title</legend>
-
-        @Html.EditorForModel()
-
-        <div class="buttons">
-            <button class="btn btn-info">Change Password</button>
-        </div>
-    </fieldset>
+    <div class='form-horizontal well'>
+        <fieldset>
+            <legend>@ViewBag.Title</legend>
+            @Html.ValidationSummary()
+            <div class="form-group">
+                @Html.LabelFor(m => m.OldPassword, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewPasswordConfirm, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.NewPasswordConfirm, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-info" value="Change Password" />
+                </div>
+            </div>
+        </fieldset>
+    </div>
 }

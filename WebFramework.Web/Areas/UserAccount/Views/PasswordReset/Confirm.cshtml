@@ -1,21 +1,36 @@
 ﻿@model Web.Areas.UserAccount.Models.ChangePasswordFromResetKeyInputModel
 @{
-    ViewBag.Title = "Change Password";
+    ViewBag.Title = "Reset Password";
 }
 
 @using (Html.BeginForm())
 {
-    @Html.ValidationSummary("Please correct the following errors")
     @Html.AntiForgeryToken()
 
-    <fieldset class="editor small">
-        <legend>@ViewBag.Title</legend>
+    <div class='form-horizontal well'>
+        <fieldset>
+            <legend>ViewBag.Title</legend>
+            @Html.ValidationSummary()
+            @Html.HiddenFor(x => x.Key)
 
-        @Html.EditorForModel()
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                </div>
+            </div>
 
-       <div class="buttonBgrBlue">
-            <button class="btn btn-info">Change Password</button>
-        </div>
-
-    </fieldset>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-info" value="Change Password" />
+                </div>
+            </div>
+        </fieldset>
+    </div>
 }
