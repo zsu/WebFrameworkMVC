@@ -3,8 +3,6 @@
     ViewBag.Title = "Change Email";
 }
 
-<h2>@ViewBag.Title</h2>
-
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary("Error")
@@ -21,7 +19,7 @@
     </fieldset>
 }
 
-@using (Html.BeginForm("Confirm", "ChangeEmail", FormMethod.Get))
+@*@using (Html.BeginForm("Confirm", "ChangeEmail", FormMethod.Get))
 {
     <fieldset>
         <legend>Confirm</legend>
@@ -31,4 +29,4 @@
         </p>
         <p class="buttons"><button class="btn btn-info">Submit</button></p>
     </fieldset>
-}
+}*@

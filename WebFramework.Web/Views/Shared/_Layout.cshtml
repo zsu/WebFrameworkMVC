@@ -42,6 +42,23 @@
                     <li>@Html.ActionLink("Restart Application", "RestartApplication", "Common", new { area = "Admin" }, new { @class = "dropdown" })</li>
                 </ul>
             }
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="dropdown" />
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Settings<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Verify Your Email Account", "Verify", "Register", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Change Password", "Index", "ChangePassword", new { area = "UserAccount"}, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Change Password Reset Secret", "Index", "ChangeSecretQuestion", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Change Username", "Index", "ChangeUsername", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Change Email", "Index", "ChangeEmail", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Change Mobile Phone Number", "Index", "ChangeMobile", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Configure Client Certificates", "Index", "Certificate", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Configure Two Factor Authentication", "Index", "TwoFactorAuth", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Manage external provider", "Manage", "LinkedAccount", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Close Account", "Index", "CloseAccount", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
+                </ul>
+            }
 
             @*<li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>*@
         </ul>

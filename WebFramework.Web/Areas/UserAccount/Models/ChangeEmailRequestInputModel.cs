@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Web.Areas.UserAccount.Models
 {
@@ -6,6 +7,7 @@ namespace Web.Areas.UserAccount.Models
     {
         //[Required]
         [EmailAddress]
+        [DisplayName("New Email")]
         public string NewEmail { get; set; }
     }
 }
