@@ -11,7 +11,7 @@
             @if (User.IsInAnyRole(new List<string> { Web.Constants.ROLE_ADMIN, Web.Constants.PERMISSION_EDIT_ROLE }))
             {
                 <li class="dropdown" />
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Roles<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-lock" aria-hidden="true">&nbsp;</span>Roles<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li>@Html.ActionLink("Roles", "Index", "Role", new { area = "Admin" }, new { @class = "dropdown" })</li>
                     <li>@Html.ActionLink("Permissions", "Index", "Permission", new { area = "Admin" }, new { @class = "dropdown" })</li>
@@ -21,7 +21,7 @@
             @if (User.IsInAnyRole(new List<string> { Web.Constants.ROLE_ADMIN, Web.Constants.ROLE_USERADMIN, Web.Constants.PERMISSION_EDIT_USER }))
             {
                 <li class="dropdown" />
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" aria-hidden="true">&nbsp;</span>Users<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li>@Html.ActionLink("Users", "Index", "User", new { area = "Admin" }, new { @class = "dropdown" })</li>
                 </ul>
@@ -29,13 +29,18 @@
             @if (User.IsInAnyRole(new List<string> { Web.Constants.ROLE_ADMIN }))
             {
                 <li class="dropdown" />
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Maintenance<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench" aria-hidden="true">&nbsp;</span>Maintenance<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     @*<li class="divider"></li>*@
                     <li>@Html.ActionLink("Logs", "Index", "Log", new { area = "Admin" }, new { @class = "dropdown" })</li>
                     <li>@Html.ActionLink("Activity Logs", "Index", "ActivityLog", new { area = "Admin" }, new { @class = "dropdown" })</li>
                     <li>@Html.ActionLink("Authentication Audit", "Index", "AuthenticationAudit", new { area = "Admin" }, new { @class = "dropdown" })</li>
-                    <li>@Html.ActionLink("Settings", "Index", "Setting", new { area = "Admin" }, new { @class = "dropdown" })</li>
+                    <li>
+                        <a href="@Url.Action("Index", "Setting", new { area = "Admin" })" class="dropdown">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                            Settings
+                        </a>
+                    </li>
                     <li>@Html.ActionLink("Clear Cache", "ClearCache", "Common", new { area = "Admin" }, new { @class = "dropdown" })</li>
                     <li>@Html.ActionLink("Message Templates", "Index", "MessageTemplate", new { area = "Admin" }, new { @class = "dropdown" })</li>
                     <li>@*@Html.ActionLink("Scheudled Tasks", "Index", "QuartzTask", new { area = "Admin" }, new { @class = "dropdown" })*@</li>
@@ -45,10 +50,10 @@
             @if (User.Identity.IsAuthenticated)
             {
                 <li class="dropdown" />
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Settings<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog aria-hidden=" true"">&nbsp;</span>My Account<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li>@Html.ActionLink("Verify Your Email Account", "Verify", "Register", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
-                    <li>@Html.ActionLink("Change Password", "Index", "ChangePassword", new { area = "UserAccount"}, new { @class = "dropdown" })</li>
+                    <li>@Html.ActionLink("Change Password", "Index", "ChangePassword", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
                     <li>@Html.ActionLink("Change Password Reset Secret", "Index", "ChangeSecretQuestion", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
                     <li>@Html.ActionLink("Change Username", "Index", "ChangeUsername", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
                     <li>@Html.ActionLink("Change Email", "Index", "ChangeEmail", new { area = "UserAccount" }, new { @class = "dropdown" })</li>
