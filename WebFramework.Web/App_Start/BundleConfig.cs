@@ -15,8 +15,8 @@ namespace Web
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
             "~/Scripts/jquery-ui-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqgrid").Include(
-                "~/Scripts/jquery.jqGrid.js",
-                "~/Scripts/i18n/grid.locale-en.js"));
+                "~/Scripts/jquery.jqGrid.js"));
+                //"~/Scripts/i18n/grid.locale-en.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
@@ -38,12 +38,13 @@ namespace Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-theme.css",
-                      "~/Content/font-awesome.css",
+                      //"~/Content/font-awesome.css",
                       "~/Content/site.css"));
             //bundles.Add(new StyleBundle("~/Content/jquery").Include(
             //    "~/Content/themes/redmond/jquery-ui.css"));
             bundles.Add(new StyleBundle("~/Content/jqgrid").Include(
                 "~/Content/jquery.jqGrid/ui.jqgrid.css"));
+                //"~/Content/jquery.jqGrid/ui.jqgrid-bootstrap.css"));
         }
     }
 }

@@ -6,11 +6,12 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-    
-    <fieldset>
-        <legend>Click To Have Your Email Address Confirmed</legend>
-        <p>
-            <button class="btn btn-info">Submit</button>
-        </p>
-    </fieldset>
+    <div class='form-horizontal well'>
+        <fieldset>
+            <legend>Click To Have Your Email Address Confirmed</legend>
+            <p>
+                <button class="btn btn-info">Submit</button>
+            </p>
+        </fieldset>
+    </div>
 }

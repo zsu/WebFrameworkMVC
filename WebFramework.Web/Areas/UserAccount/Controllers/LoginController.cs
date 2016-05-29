@@ -5,7 +5,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Nh;
-
 namespace Web.Areas.UserAccount.Controllers
 {
     [AllowAnonymous]
@@ -39,17 +38,17 @@ namespace Web.Areas.UserAccount.Controllers
 
                     if (account.RequiresTwoFactorAuthCodeToSignIn())
                     {
-                        return RedirectToAction("TwoFactorAuthCodeLogin");
+                        return RedirectToAction("TwoFactorAuthCodeLogin", new { uid = account.ID });
                     }
                     if (account.RequiresTwoFactorCertificateToSignIn())
                     {
-                        return RedirectToAction("CertificateLogin");
+                        return RedirectToAction("CertificateLogin",new { uid = account.ID });
                     }
 
                     if (account.RequiresPasswordReset || userAccountService.IsPasswordExpired(account))
                     {
-                        return RedirectToAction("Index", "ChangePassword");
-                    }
+                        return RedirectToAction("Index", "ChangePassword",new {uid=account.ID });
+                    }   
                     
                     if (Url.IsLocalUrl(model.ReturnUrl))
                     {

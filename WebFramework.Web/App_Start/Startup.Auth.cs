@@ -24,16 +24,11 @@ namespace Web
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-            app.Use((context, next) =>
-            {
-                //IoC.RegisterInstance<IOwinContext>(context,LifetimeType.PerRequest);
-                FirstRequestInitialization.Initialize();
-                return next();
-            });
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive,           
                 ExpireTimeSpan = TimeSpan.FromMinutes(string.IsNullOrEmpty(ConfigurationManager.AppSettings["AuthCookieExpireTimeSpanInMinutes"]) ? 30 : Int32.Parse(ConfigurationManager.AppSettings["AuthCookieExpireTimeSpanInMinutes"])),
                 LoginPath = new PathString("/UserAccount/Login")
             });
@@ -41,7 +36,12 @@ namespace Web
             //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             ConfigureMembershipReboot(app);
-
+            app.Use((context, next) =>
+            {
+                //IoC.RegisterInstance<IOwinContext>(context,LifetimeType.PerRequest);
+                FirstRequestInitialization.Initialize();
+                return next();
+            });
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
             //    clientId: "",
@@ -82,8 +82,16 @@ namespace Web
             {
                 return new OwinAuthenticationService<NhUserAccount>(authType, IoC.GetService<NhUserAccountService<NhUserAccount>>(), IoC.GetService<IOwinContext>().Environment, new Web.Infrastructure.RoleClaimsAuthenticationManager());
             }).LifestylePerWebRequest());
-            
 
+
+            container.Register(Component.For<UserAccountService>().OnCreate(ctx =>
+            {
+                var debugging = false;
+#if DEBUG
+                debugging = true;
+#endif
+                ctx.ConfigureTwoFactorAuthenticationCookies(IoC.GetService<IOwinContext>().Environment, debugging);
+            }).LifestylePerWebRequest());
             container.Register(Component.For<UserAccountService<NhUserAccount>>().OnCreate(ctx =>
             {
                 var debugging = false;
@@ -139,7 +147,7 @@ namespace Web
                 var account = userService.FindBy(x => x.Username == username || x.Email == userEmail);
                 if (account == null)
                 {
-                    NhUserAccount user = new NhUserAccount() { Username = username, Email = userEmail, HashedPassword = "Abc123$", FirstName = "Admin", IsLoginAllowed = true, IsAccountVerified = true };
+                    NhUserAccount user = new NhUserAccount() { Username = username, Email = userEmail, HashedPassword = "Abcd1234$", FirstName = "Admin", IsLoginAllowed = true, IsAccountVerified = true };
                     account = userService.CreateAccountWithTempPassword(user);
                 }
 

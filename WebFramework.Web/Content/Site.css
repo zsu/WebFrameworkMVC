@@ -13,13 +13,13 @@
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-top: 100px;
+    padding-top: 80px;
     padding-bottom: 50px;
 }
 
 .wrapper {
     position: relative;
-    min-height: 100%;
+    /*min-height: 100%;*/
 }
 /* Set width on the form input elements since they're 100% wide by default */
 input,
@@ -61,7 +61,7 @@ input[type="checkbox"].input-validation-error {
     right: 10px;
     z-index: 10000;
     margin: 5px auto;
-    width: 500px;
+    /*width: 500px;*/
 }
 
     #messagewrapper .messagebox {
@@ -212,3 +212,37 @@ input[type="checkbox"].input-validation-error {
     padding-left: 15px;
     padding-right: 15px;
 }
+/*JqGrid hack*/
+/*div.ui-jqgrid-view table.ui-jqgrid-btable {
+    border-style: none;
+    border-top-style: none;
+    border-collapse: separate;
+}
+
+    div.ui-jqgrid-view table.ui-jqgrid-btable td {
+        border-left-style: none;
+    }
+
+div.ui-jqgrid-view table.ui-jqgrid-htable {
+    border-style: none;
+    border-top-style: none;
+    border-collapse: separate;
+    border-bottom: 1px solid #ddd;
+}
+
+div.ui-jqgrid-view table.ui-jqgrid-btable th {
+    border-left-style: none;
+}*/
+
+/*div.ui-jqgrid-bdiv {
+    width: 100% !important;
+}
+
+div.frozen-bdiv {
+    width: auto !important;
+}
+
+.table-bordered {
+    border: 0;
+}*/
+/*End JqGrid Hack*/

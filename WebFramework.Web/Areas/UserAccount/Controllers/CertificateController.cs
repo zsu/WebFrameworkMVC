@@ -18,9 +18,9 @@ namespace Web.Areas.UserAccount.Controllers
             this.userAccountService = userAccountService;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(Guid? uid)
         {
-            var acct = userAccountService.GetByID(this.User.GetUserID());
+            var acct = userAccountService.GetByID(User.HasUserID() ? User.GetUserID() : uid.Value);
             return View(acct);
         }
 

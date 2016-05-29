@@ -7,27 +7,27 @@
 {
     @Html.ValidationSummary("Please correct the following errors")
     @Html.AntiForgeryToken()
+    <div class='form-horizontal well'>
+        <fieldset class="editor">
+            <legend>@ViewBag.Title</legend>
 
-    <fieldset class="editor">
-        <legend>@ViewBag.Title</legend>
+            @Html.EditorForModel()
 
-        @Html.EditorForModel()
+            <div class="buttons">
+                <button class="btn btn-info">Submit</button>
+            </div>
 
-        <div class="buttons">
-            <button class="btn btn-info">Submit</button>
-        </div>
-
-    </fieldset>
+        </fieldset>
+    </div>
 }
-
 @*@using (Html.BeginForm("Confirm", "PasswordReset", FormMethod.Get))
-{
-    <fieldset>
-        <legend>Confirm</legend>
-        <p>
-            <label for="id">Key</label>
-            <input id="id" name="id" />
-        </p>
-        <p class="buttons"><button class="btn btn-info">Submit</button></p>
-    </fieldset>
-}*@
+    {
+        <fieldset>
+            <legend>Confirm</legend>
+            <p>
+                <label for="id">Key</label>
+                <input id="id" name="id" />
+            </p>
+            <p class="buttons"><button class="btn btn-info">Submit</button></p>
+        </fieldset>
+    }*@

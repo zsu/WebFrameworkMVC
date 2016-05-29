@@ -43,11 +43,11 @@
             </div>
             @RenderBody()
         </div>
-        <footer class="footer content">
-            &copy; @DateTime.Now.Year - @Util.ApplicationConfiguration.Copyright
-            <span class="pull-right"><span class="buildinfo">@System.Configuration.ConfigurationManager.AppSettings["SourceBranch"] @System.Configuration.ConfigurationManager.AppSettings["SourceVersion"] @System.Configuration.ConfigurationManager.AppSettings["Environment"] @File.GetLastWriteTimeUtc(ViewContext.Controller.GetType().Assembly.Location).ToClientTime("yyyy-MM-dd")</span> |@RenderSection("footerright", required: false)</span>
-        </footer>
     </div>
+    <footer class="footer content">
+        &copy; @DateTime.Now.Year - @Util.ApplicationConfiguration.Copyright
+        <span class="pull-right"><span class="buildinfo">@System.Configuration.ConfigurationManager.AppSettings["SourceBranch"] @System.Configuration.ConfigurationManager.AppSettings["SourceVersion"] @System.Configuration.ConfigurationManager.AppSettings["Environment"] @File.GetLastWriteTimeUtc(ViewContext.Controller.GetType().Assembly.Location).ToClientTime("yyyy-MM-dd")</span> |@RenderSection("footerright", required: false)</span>
+    </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryui") @*Modal dialog close button image bug in jquery ui, must be renderred after bootstrap*@

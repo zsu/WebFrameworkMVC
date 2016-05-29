@@ -1,0 +1,129 @@
+﻿<div class="form-horizontal">
+    <div>
+        <table id="tblgrid"></table>
+        <div id="pager" />
+    </div>
+    <script type="text/javascript">
+        $().ready(function () {
+            var grid = $('#tblgrid');
+            $.extend($.jgrid.defaults, {
+                autowidth: true,
+                shrinkToFit:true,
+                caption: '@ViewBag.Title',
+                datatype: 'json',
+                mtype: 'GET',
+                height: '100%',
+                pager: '#pager',
+                rowList: [10, 15, 20, 50],
+                rowNum: 10,
+                toolbar: [false, 'bottom'],
+                viewrecords: true,
+                ignoreCase: true,
+                cmTemplate: {autoResizable: true },
+                //styleUI: 'Bootstrap',
+                //responsive: true
+            });
+            //$(grid).jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+            $.extend($.jgrid.edit, {
+                afterSubmit: function (response, postdata) {
+                    var res = $.parseJSON(response.responseText);
+                    if (res.Message) {
+                        var myInfo = '<div class="ui-state-highlight ui-corner-all">' +
+                        '<span class="ui-icon ui-icon-info" ' +
+                            'style="float: left; margin-right: .3em;"></span>' +
+                        res.Message +
+                        '</div>',
+                        $infoTr = $("#TblGrid_" + $.jgrid.jqID(this.id) + ">tbody>tr.tinfo"),
+                        $infoTd = $infoTr.children("td.topinfo");
+                        $infoTd.html(myInfo);
+                        $infoTr.show();
+
+                        // display status message to 3 sec only
+                        setTimeout(function () {
+                            $infoTr.slideUp("slow");
+                        }, 3000);
+                    }
+                    return [res.Success, res.Message, res.RowId];
+                },
+                errorTextFormat: showError
+            });
+            $.extend($.jgrid.del, { errorTextFormat: showError });
+        });
+        function updateDialog(action, url) {
+            return {
+                url: url,
+                closeAfterAdd: false,
+                closeAfterEdit: false,
+                afterShowForm: function (formId) { },
+                modal: true,
+                onclickSubmit: function (params) {
+                    var list = $("#tblgrid");
+                    var selectedRow = list.getGridParam("selrow");
+                    rowData = list.getRowData(selectedRow);
+                    params.url = url + rowData.ID;
+                    params.mtype = action;
+                },
+                beforeShowForm: function ($form) {
+                    $form.find(".FormElement[readonly]")
+                        .prop("disabled", true)
+                        .addClass("ui-state-disabled")
+                        .closest(".DataTD")
+                        .prev(".CaptionTD")
+                        .prop("disabled", true)
+                        .addClass("ui-state-disabled");
+                    switch (action) {
+                        case "POST":
+                            $('#tr_IsLoginAllowed', $form).hide();
+                            $('#tr_FailedLoginCount', $form).hide();
+                            $('#tr_RequiresPasswordReset', $form).hide();
+                            $('#tr_IsAccountVerified', $form).hide();
+                            $('#tr_FailedPasswordResetCount', $form).hide();
+                            $('#tr_MobilePhoneNumber', $form).hide();
+                            $('#tr_IsAccountClosed', $form).hide();
+                            break;
+                    }
+                },
+                recreateForm: true,
+                width: "auto",
+                height:'auto'
+            };
+        };
+        function showSelectRowAlert(grid) {
+            grid.modalAlert();
+        };
+        function showError(data) {
+            var res = $.parseJSON(data.responseText);
+            if (res.ExceptionMessage)
+                log.error(res.ExceptionMessage);
+            return '<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>' +
+                   "<strong>Error: <strong>" + res.Message;/*Status: '" +
+                             data.statusText + "'. Error code: " + data.status;*/
+        };
+        datePick = function (elem) {
+            $(elem).datepicker(
+                {
+                    changeYear: true,
+                    changeMonth: true,
+                    showButtonPanel: false,
+                    dateFormat: 'yy-mm-dd'
+                });
+        };
+        function validateGuid(value, colName) {
+            if (value && value.length > 0) {
+                var re = new RegExp(/^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/);
+                if (re.test(value))
+                    return [true, ""];
+            }
+            return [false, colName + ": Invalid Guid."];
+        };
+        function validateDate(value, colName) {
+            if (value && value.length > 0) {
+                var re = new RegExp(/^(19|20)\d\d([-/.])(0?[1-9]|1[012])\2(0?[1-9]|[12][0-9]|3[01])$/);
+                if (re.test(value))
+                    return [true, ""];
+            }
+            return [false, colName + ": please enter a date with format YYYY-MM-DD."];
+        };
+        </script>
+    </div>
+

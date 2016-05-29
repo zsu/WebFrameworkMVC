@@ -1,5 +1,6 @@
 ﻿using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Nh;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
@@ -14,23 +15,23 @@ namespace Web.Areas.UserAccount.Controllers
             this.userAccountService = userAccountService;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(Guid? uid)
         {
-            var acct = userAccountService.GetByID(this.User.GetUserID());
+            var acct = userAccountService.GetByID(User.HasUserID()?this.User.GetUserID():uid.Value);
             return View(acct);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(TwoFactorAuthMode mode)
+        public ActionResult Index(TwoFactorAuthMode mode,Guid? uid)
         {
             try
             {
-                this.userAccountService.ConfigureTwoFactorAuthentication(this.User.GetUserID(), mode);
+                this.userAccountService.ConfigureTwoFactorAuthentication(User.HasUserID()?User.GetUserID():uid.Value, mode);
                 
                 ViewData["Message"] = "Update Success";
                 
-                var acct = userAccountService.GetByID(this.User.GetUserID());
+                var acct = userAccountService.GetByID(User.HasUserID() ? User.GetUserID() : uid.Value);
                 return View("Index", acct);
             }
             catch (ValidationException ex)
@@ -38,7 +39,7 @@ namespace Web.Areas.UserAccount.Controllers
                 ModelState.AddModelError("", ex.Message);
             }
             
-            return View("Index", userAccountService.GetByID(this.User.GetUserID()));
+            return View("Index", userAccountService.GetByID(User.HasUserID() ? User.GetUserID() : uid.Value));
         }
     }
 }

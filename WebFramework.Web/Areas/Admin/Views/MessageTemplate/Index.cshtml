@@ -1,260 +1,119 @@
 ﻿@{
     ViewBag.Title = "Message Templates";
 }
-<style>
-    div.ui-jqgrid-view table.ui-jqgrid-btable {
-        border-style: none;
-        border-top-style: none;
-        border-collapse: separate;
-    }
-
-        div.ui-jqgrid-view table.ui-jqgrid-btable td {
-            border-left-style: none;
-        }
-
-    div.ui-jqgrid-view table.ui-jqgrid-htable {
-        border-style: none;
-        border-top-style: none;
-        border-collapse: separate;
-    }
-
-    div.ui-jqgrid-view table.ui-jqgrid-btable th {
-        border-left-style: none;
-    }
-</style>
 @Styles.Render("~/Content/jqgrid")
 @Scripts.Render("~/bundles/jquery")
 <h2>@ViewBag.Title</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <hr />
-        <div>
-            <div class="table-responsive">
-                <table id="tblgrid"></table>
-            </div>
-            <div id="pager">
-            </div>
-            <script type="text/javascript">
-                $().ready(function () {
-                    var baseUrl = '@Url.Content("~/")';
-                    var API_URL = baseUrl+"api/messagetemplate/";
-                    var grid = $('#tblgrid');
-                    $(grid).jqGrid({
-                        autowidth: true,
-                        caption: 'Message Templates',
-                        datatype: 'json',
-                        mtype: 'GET',
-                        height: '100%',
-                        pager: '#pager',
-                        rowList: [10, 15, 20, 50],
-                        rowNum: 10,
-                        sortname: 'Name',
-                        sortorder: 'asc',
-                        toolbar: [false, 'bottom'],
-                        url: API_URL,
-                        viewrecords: true,
-                        ignoreCase: true,
-                        colModel: [
-                        {
-                            name: 'Id',
-                            label: 'Id',
-                            editable: true,
-                            edittype: 'text',
-                            editoptions: { readonly: 'readonly' },
-                            index: 'Id',
-                            hidden: true
-                        }, {
-                            name: 'Name',
-                            editable: true,
-                            edittype: 'text',
-                            editoptions: { maxlength: 200 },
-                            editrules: { required: true },
-                            index: 'Name'
-                        }, {
-                            name: 'BccEmailAddresses',
-                            editable: true,
-                            edittype: 'text',
-                            eidtoptions: {},
-                            editrules: { required: false },
-                            index: 'BccEmailAddresses'
-                        }, {
-                            name: 'Subject',
-                            editable: true,
-                            edittype: 'text',
-                            editoptions: { maxlength: 1000},
-                            editrules: { required: false },
-                            index: 'Subject'
-                        }, {
-                            name: 'Body',
-                            editable: true,
-                            edittype: 'textarea',
-                            editoptions: {rows: "10", cols: "50" },
-                            editrules: { required: false },
-                            index: 'Body'
-                        }, {
-                            name: 'IsActive',
-                            editable: true,
-                            edittype: 'checkbox',
-                            editoptions: { value: "true:false" },
-                            formatter: 'checkbox',
-                            searchoptions: { sopt: ['eq'], value: "true:true;false:false" },
-                            stype: 'select',
-                            index: 'IsActive'
-                        }
-                        ]
-                    });
-                    //$(grid).jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-                    $(grid).jqGrid("navGrid", "#pager", { add: true, edit: true, del: true, search: true, refresh: true },
-                                updateDialog('PUT', API_URL),//edit parameters
-                                updateDialog('POST', API_URL),//add parameters
-                                updateDialog('DELETE', API_URL),//del parameters
-                    {
-                        groupOps: [{ op: "AND", text: "and" }, { op: "OR", text: "or" }], multipleSearch: true, multipleGroup: true, showQuery: true, sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'ew', 'en', 'cn', 'nc']
-                    },//search parameters
-                    { recreateForm: true }
-                    );
-                    $(grid).jqGrid('navButtonAdd', "#pager",
-                    {
-                        caption: ""/*"Show"*/, buttonicon: "ui-icon-mail-closed", title: "Send Test Email",
-                        onClickButton: function () {
-                            var rowid = $(grid).jqGrid('getGridParam', 'selrow');
-                            if (!rowid) {
-                                showSelectRowAlert(this.id);
-                                return;
-                            }
-                            $.ajax({
-                                type: 'POST',
-                                url: baseUrl + 'api/messagetemplatetest/' + rowid,
-
-                                crossDomain: false,
-                                success: function (msg) {
-                                    //alert("success");
-                                },
-                                error: function (request, status, error) {
-                                    //log.error(error);
-                                }
-                            });
-                        }
-                    });
-                    $(grid).jqGrid('navButtonAdd', "#pager",
-                    //{ caption: "Clear", title: "Clear Search", buttonicon: 'ui-icon-arrowreturnthick-1-w', onClickButton: function () { $(grid)[0].clearToolbar(); } },
-                    {
-                        caption: ""/*"Show"*/, buttonicon: "ui-icon-disk", title: "Export to Excel",
-                        onClickButton: function () {
-                            var postData = $(grid).jqGrid('getGridParam', 'postData');
-                            var url = API_URL + "exporttoexcel/?";
-                            $.each(postData, function (key, value) {
-                                url += ((url.substr(-1) === "?" ? "" : "&") + key + "=" + encodeURIComponent(value));
-                            });
-                            window.open(url, '_blank', '');
-                        }
-                    });
-                    $.extend($.jgrid.edit, {
-                        afterSubmit: function (response, postdata) {
-                            var res = $.parseJSON(response.responseText);
-                            if (res.Message) {
-                                var myInfo = '<div class="ui-state-highlight ui-corner-all">' +
-                            '<span class="ui-icon ui-icon-info" ' +
-                                'style="float: left; margin-right: .3em;"></span>' +
-                            res.Message +
-                            '</div>',
-                            $infoTr = $("#TblGrid_" + $.jgrid.jqID(this.id) + ">tbody>tr.tinfo"),
-                            $infoTd = $infoTr.children("td.topinfo");
-                                $infoTd.html(myInfo);
-                                $infoTr.show();
-
-                                // display status message to 3 sec only
-                                setTimeout(function () {
-                                    $infoTr.slideUp("slow");
-                                }, 3000);
-                            }
-                            return [res.Success, res.Message, res.RowId];
-                        },
-                        errorTextFormat: showError
-                    });
-                    $.extend($.jgrid.del, { errorTextFormat: showError });
-                });
-                function updateDialog(action, url) {
-                    return {
-                        url: url,
-                        closeAfterAdd: false,
-                        closeAfterEdit: false,
-                        afterShowForm: function (formId) { },
-                        modal: true,
-                        onclickSubmit: function (params) {
-                            var list = $("#tblgrid");
-                            var selectedRow = list.getGridParam("selrow");
-                            rowData = list.getRowData(selectedRow);
-                            params.url = url + rowData.Id;
-                            params.mtype = action;
-                        },
-                        beforeShowForm: function ($form) {
-                            $form.find(".FormElement[readonly]")
-                                .prop("disabled", true)
-                                .addClass("ui-state-disabled")
-                                .closest(".DataTD")
-                                .prev(".CaptionTD")
-                                .prop("disabled", true)
-                                .addClass("ui-state-disabled");
-                        },
-                        recreateForm: true,
-                        width: "450"
-                    };
+    @Html.Partial(Url.Content("~/Views/Shared/_JqGridPartial.cshtml"))
+    <script type="text/javascript">
+        $().ready(function () {
+            var baseUrl = '@Url.Content("~/")';
+            var API_URL = baseUrl + "api/messagetemplate/";
+            var grid = $('#tblgrid');
+            $(grid).jqGrid({
+                url: API_URL,
+                sortname: 'Name', 
+                sortorder: 'asc',  
+            colModel: [
+                {
+                    name: 'Id',
+                    label: 'Id',
+                    editable: true,
+                    edittype: 'text',
+                    editoptions: { readonly: 'readonly' },
+                    index: 'Id',
+                    hidden: true
+                }, {
+                    name: 'Name',
+                    editable: true,
+                    edittype: 'text',
+                    editoptions: { maxlength: 200 },
+                    editrules: { required: true },
+                    index: 'Name'
+                }, {
+                    name: 'BccEmailAddresses',
+                    editable: true,
+                    edittype: 'text',
+                    eidtoptions: {},
+                    editrules: { required: false },
+                    index: 'BccEmailAddresses'
+                }, {
+                    name: 'Subject',
+                    editable: true,
+                    edittype: 'text',
+                    editoptions: { maxlength: 1000 },
+                    editrules: { required: false },
+                    index: 'Subject'
+                }, {
+                    name: 'Body',
+                    editable: true,
+                    edittype: 'textarea',
+                    editoptions: { rows: "10", cols: "50" },
+                    editrules: { required: false },
+                    index: 'Body'
+                }, {
+                    name: 'IsActive',
+                    editable: true,
+                    edittype: 'checkbox',
+                    editoptions: { value: "true:false" },
+                    formatter: 'checkbox',
+                    searchoptions: { sopt: ['eq'], value: "true:true;false:false" },
+                    stype: 'select',
+                    index: 'IsActive'
                 }
-                function showSelectRowAlert(gridid) {
-                    var alertIDs = { themodal: 'alertmod', modalhead: 'alerthd', modalcontent: 'alertcnt' };
-                    if ($("#" + alertIDs.themodal).html() === null || $("#" + alertIDs.themodal).html() === undefined) {
-                        var gbox = $("#gbox_" + $.jgrid.jqID(gridid));
-                        var of = $(gbox).offset();
-                        var w = $(gbox).width();
-                        var h = $(gbox).height();
-                        var w1 = $("#" + alertIDs.themodal).width();
-                        var h1 = $("#" + alertIDs.themodal).height();
-                        var toppos = of.top + ((h - h1) / 2);
-                        var leftpos = of.left + ((w - w1) / 2);
-                        $.jgrid.createModal(alertIDs, "<div>" + $.jgrid.nav.alerttext + "</div><span tabindex='0'><span tabindex='-1' id='jqg_alrt'></span></span>",
-                            {
-                                gbox: "#gbox_" + $.jgrid.jqID(gridid), jqModal: true, drag: true, resize: true,
-                                caption: $.jgrid.nav.alertcap,
-                                //top: 100, left: 100, width: 200, height: 'auto',
-                                top: toppos, left: leftpos, width: w1, height: 'auto',
-                                closeOnEscape: true,
-                                zIndex: null
-                            }, "", "", true);
+                ]
+            });
+            //$(grid).jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+            $(grid).jqGrid("navGrid", "#pager", { add: true, edit: true, del: true, search: true, refresh: true },
+                        updateDialog('PUT', API_URL),//edit parameters
+                        updateDialog('POST', API_URL),//add parameters
+                        updateDialog('DELETE', API_URL),//del parameters
+            {
+                groupOps: [{ op: "AND", text: "and" }, { op: "OR", text: "or" }], multipleSearch: true, multipleGroup: true, showQuery: true, sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'ew', 'en', 'cn', 'nc']
+            },//search parameters
+            { recreateForm: true }
+            );
+            $(grid).jqGrid('navButtonAdd', "#pager",
+            {
+                caption: ""/*"Show"*/, buttonicon: "ui-icon-mail-closed", title: "Send Test Email",
+                onClickButton: function () {
+                    var rowid = $(grid).jqGrid('getGridParam', 'selrow');
+                    if (!rowid) {
+                        showSelectRowAlert(this);
+                        return;
                     }
-                    $.jgrid.viewModal("#" + alertIDs.themodal, { gbox: "#gbox_" + $.jgrid.jqID(gridid), jqm: true });
-                    $("#jqg_alrt").focus();
+                    $.ajax({
+                        type: 'POST',
+                        url: baseUrl + 'api/messagetemplatetest/' + rowid,
+
+                        crossDomain: false,
+                        success: function (msg) {
+                            //alert("success");
+                        },
+                        error: function (request, status, error) {
+                            //log.error(error);
+                        }
+                    });
                 }
-                function showError(data) {
-                    var res = $.parseJSON(data.responseText);
-                    if (res.ExceptionMessage)
-                        log.error(res.ExceptionMessage);
-                    return '<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>' +
-                           "<strong>Error: <strong>" + res.Message;
+            });
+            $(grid).jqGrid('navButtonAdd', "#pager",
+            //{ caption: "Clear", title: "Clear Search", buttonicon: 'ui-icon-arrowreturnthick-1-w', onClickButton: function () { $(grid)[0].clearToolbar(); } },
+            {
+                caption: ""/*"Show"*/, buttonicon: "ui-icon-disk", title: "Export to Excel",
+                onClickButton: function () {
+                    var postData = $(grid).jqGrid('getGridParam', 'postData');
+                    var url = API_URL + "exporttoexcel/?";
+                    $.each(postData, function (key, value) {
+                        url += ((url.substr(-1) === "?" ? "" : "&") + key + "=" + encodeURIComponent(value));
+                    });
+                    window.open(url, '_blank', '');
                 }
-                datePick = function (elem) {
-                    $(elem).datepicker(
-                        {
-                            changeYear: true,
-                            changeMonth: true,
-                            showButtonPanel: false,
-                            dateFormat: 'yy-mm-dd'
-                        });
-                }
-                function validateDate(value, colName) {
-                    if (value && value.length > 0) {
-                        var re = new RegExp(/^(19|20)\d\d([-/.])(0?[1-9]|1[012])\2(0?[1-9]|[12][0-9]|3[01])$/);
-                        if (re.test(value))
-                            return [true, ""];
-                    }
-                    return [false, colName + ": please enter a date with format YYYY-MM-DD."];
-                }
-            </script>
-        </div>
-    </div>
+            });
+        });
+    </script>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqgrid")

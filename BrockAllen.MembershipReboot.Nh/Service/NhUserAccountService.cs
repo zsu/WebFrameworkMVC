@@ -78,13 +78,14 @@ namespace BrockAllen.MembershipReboot.Nh.Service
             account.PasswordChanged = new DateTime(1900, 1, 1);
             account.FirstName = firstname;
             account.LastName = lastname;
+            account.RequiresPasswordReset = true;
             ValidateEmail(account, email);
             ValidateUsername(account, username);
             ValidatePassword(account, password);
             Tracing.Verbose("[UserAccountService.CreateAccountWithTempPassword] success");
 
-            _eventBusUserRepository.Add(account);
             this.AddEvent(new PasswordGeneratedEvent<T> { Account = account, InitialPassword = password, VerificationKey = key });
+            _eventBusUserRepository.Add(account);
             return account;
         }
 

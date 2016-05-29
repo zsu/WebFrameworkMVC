@@ -34,6 +34,8 @@ namespace Web.Controllers.Api
         [AllowAnonymous]
         public HttpResponseMessage PostJavascriptLog(LogEntry[] data)
         {
+            if (data == null || data.Length == 0)
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             LogLevel logLevel = LogLevel.Debug;
             foreach (var item in data)
             {

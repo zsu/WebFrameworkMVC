@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Nh;
+using System;
 
 namespace Web.Areas.UserAccount.Controllers
 {
@@ -15,9 +16,9 @@ namespace Web.Areas.UserAccount.Controllers
             this.userAccountService = userAccountService;
         }
         
-        public ActionResult Index()
+        public ActionResult Index(Guid? uid)
         {
-            if (!User.HasUserID())
+            if (!User.HasUserID() && uid==null)
             {
                 return new HttpUnauthorizedResult();
             }
@@ -26,9 +27,9 @@ namespace Web.Areas.UserAccount.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(ChangePasswordInputModel model)
+        public ActionResult Index(ChangePasswordInputModel model,Guid? uid)
         {
-            if (!User.HasUserID())
+            if (!User.HasUserID() && uid==null)
             {
                 return new HttpUnauthorizedResult();
             }
@@ -37,7 +38,7 @@ namespace Web.Areas.UserAccount.Controllers
             {
                 try
                 {
-                    this.userAccountService.ChangePassword(User.GetUserID(), model.OldPassword, model.NewPassword);
+                    this.userAccountService.ChangePassword(User.HasUserID()?User.GetUserID():uid.Value, model.OldPassword, model.NewPassword);
                     return View("Success");
                 }
                 catch (ValidationException ex)
