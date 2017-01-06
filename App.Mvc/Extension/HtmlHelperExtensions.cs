@@ -60,8 +60,8 @@ namespace App.Mvc
                             break;
                     }
                 }
-                messages = messageBoxStatusBar == null || string.IsNullOrEmpty(messageBoxStatusBar.ToString()) ? null : messageBoxStatusBar.ToString()+
-                    (messageBoxModal == null || string.IsNullOrEmpty(messageBoxModal.ToString()) ? null : messageBoxModal.ToString());
+                messages = messageBoxStatusBar == null || string.IsNullOrEmpty(messageBoxStatusBar.ToString()) ? null : messageBoxStatusBar.ToString();
+                messages+= (messageBoxModal == null || string.IsNullOrEmpty(messageBoxModal.ToString()) ? null : messageBoxModal.ToString());
                 SessionMessageManager.Clear();
             }
             return MvcHtmlString.Create(messages);
