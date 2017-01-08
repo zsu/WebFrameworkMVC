@@ -81,6 +81,10 @@ The encrypted connectionstrings in web.config also has three corresponding conne
 	<add name="AppDB" connectionString="Data Source=|DataDirectory|WebFramework.sdf;Enlist=false;" providerName="System.Data.SqlServerCe.4.0" />
 </connectionStrings>
 ```
+
+#License
+All source code is licensed under MIT license - http://www.opensource.org/licenses/mit-license.php
+
 #Screenshots
 ![WebFramework](screenshots/login.jpg?raw=true "login")
 ![WebFramework](screenshots/log.jpg?raw=true "log")
