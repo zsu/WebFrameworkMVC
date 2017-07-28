@@ -60,7 +60,7 @@
                     var list = $("#tblgrid");
                     var selectedRow = list.getGridParam("selrow");
                     rowData = list.getRowData(selectedRow);
-                    params.url = url + rowData.ID;
+                    params.url = url + rowData.Id;
                     params.mtype = action;
                 },
                 beforeShowForm: function ($form) {
